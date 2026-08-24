@@ -12,9 +12,9 @@ EDIT_BUFFER_RESPONSE = DEVICE_PREFIX + (0x03,)
 PROGRAM_BYTES = 1024
 PACKED_BYTES = PROGRAM_BYTES + (PROGRAM_BYTES + 6) // 7
 
-SEQUENCE_LENGTH_INDEX = 170
-NOTE_START_INDEX = 256
-VELOCITY_START_INDEX = 320
+SEQUENCE_LENGTH_INDEX = 95
+NOTE_START_INDEX = 128
+VELOCITY_START_INDEX = 192
 STEP_COUNT = 64
 SEQUENCER_BYTES = VELOCITY_START_INDEX + STEP_COUNT
 MIN_PACKED_BYTES = SEQUENCER_BYTES + (SEQUENCER_BYTES + 6) // 7
@@ -38,7 +38,7 @@ class SequencerData:
 
     length: int
     steps: tuple[SequencerStep, ...]
-    length_code: int
+    raw_length: int
 
 
 def decode_edit_buffer(packed: Sequence[int]) -> bytes:
@@ -101,9 +101,9 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
     # only depends on the first 384 decoded bytes. Accept longer or shorter
     # firmware variants as long as all sequencer fields are present.
     program = _decode_packed_bytes(packed)
-    length_code = program[SEQUENCE_LENGTH_INDEX]
-    if not 0 <= length_code <= 6:
-        raise ValueError(f"invalid AS-1 sequence length code: {length_code}")
+    raw_length = program[SEQUENCE_LENGTH_INDEX]
+    if not 0 <= raw_length < STEP_COUNT:
+        raise ValueError(f"invalid AS-1 sequence length value: {raw_length}")
 
     steps = tuple(
         SequencerStep(
@@ -113,9 +113,9 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
         for index in range(STEP_COUNT)
     )
     return SequencerData(
-        length=1 << length_code,
+        length=raw_length + 1,
         steps=steps,
-        length_code=length_code,
+        raw_length=raw_length,
     )
 
 

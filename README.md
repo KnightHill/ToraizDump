@@ -73,8 +73,11 @@ F0 00 40 05 00 00 01 08 10 06 F7
 
 The AS-1 responds with an edit-buffer dump containing 1,024 program bytes,
 documented as 1,171 MIDI-safe packed bytes. The parser validates the response
-header and reconstructs the bytes needed for the sequencer. It tolerates dump
-length variations as long as the complete sequencer region is present.
+header and reconstructs the bytes needed for the sequencer. It reads the raw
+program layout (length at byte 95, notes at bytes 128–191, and velocities at
+bytes 192–255) rather than treating MIDI NRPN numbers as program offsets. It
+tolerates dump length variations as long as the complete sequencer region is
+present.
 
 ## Development
 

@@ -21,9 +21,9 @@ class FakeInput:
         return self.messages.pop(0) if self.messages else None
 
 
-def edit_buffer_message(length_code=4):
+def edit_buffer_message(raw_length=4):
     program = bytearray(1024)
-    program[170] = length_code
+    program[95] = raw_length
     return mido.Message(
         "sysex",
         data=bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program),
@@ -40,7 +40,7 @@ def test_reads_response_after_ignoring_unrelated_messages():
 
     sequence = read_current_sequencer(output, input_port, timeout=0.1)
 
-    assert sequence.length == 16
+    assert sequence.length == 5
     assert output.messages == [mido.Message("sysex", data=EDIT_BUFFER_REQUEST)]
 
 

@@ -12,10 +12,10 @@ from toraiz_dump.protocol import (
 
 def make_program():
     program = bytearray(1024)
-    program[170] = 4
+    program[95] = 15
     for index in range(64):
-        program[256 + index] = 36 + index
-        program[320 + index] = 0 if index == 2 else 127 - index
+        program[128 + index] = 36 + index
+        program[192 + index] = 0 if index == 2 else 127 - index
     return program
 
 
@@ -32,7 +32,7 @@ def test_parse_sequencer_data():
     sequence = parse_edit_buffer_response(response)
 
     assert sequence.length == 16
-    assert sequence.length_code == 4
+    assert sequence.raw_length == 15
     assert sequence.steps[0].note == 36
     assert sequence.steps[0].velocity == 127
     assert sequence.steps[2].is_rest
@@ -43,6 +43,17 @@ def test_parse_accepts_mido_payload_without_f0_f7():
     program = make_program()
     payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
     assert parse_edit_buffer_response(payload).length == 16
+
+
+def test_nrpn_170_is_not_treated_as_the_raw_length_offset():
+    program = make_program()
+    program[170] = 68
+    payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+    sequence = parse_edit_buffer_response(payload)
+
+    assert sequence.length == 16
+    assert sequence.steps[42].note == 68
 
 
 def test_parse_accepts_only_the_data_needed_for_the_sequencer():
