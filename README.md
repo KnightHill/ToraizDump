@@ -76,3 +76,11 @@ pytest
 
 The protocol parser can also be used independently of MIDI hardware through
 `toraiz_dump.protocol`.
+
+## Disclaimer
+
+This project is independent and unaffiliated with Pioneer DJ, AlphaTheta, or
+any of their subsidiaries, brands, or partners. Use it at your own risk. The
+author and contributors are not responsible for any damage, data loss, or
+other consequences resulting from the use of this software or its interaction
+with any hardware or software.
