@@ -23,6 +23,16 @@ toraiz-dump --list-ports
 
 ## Dump the current sequencer
 
+Try automatic TORAIZ port detection:
+
+```bash
+toraiz-dump --auto
+```
+
+`--auto` searches MIDI input and output port names for `TORAIZ`, `AS-1`, or
+`AS1`, and pairs ports with matching names. If more than one device matches,
+specify the ports explicitly.
+
 When the device uses the same port for MIDI input and output:
 
 ```bash
