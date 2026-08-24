@@ -7,6 +7,7 @@ import json
 import re
 from collections.abc import Sequence
 
+from .ports import RtMidiPollingInput
 from .transport import read_current_sequencer
 
 
@@ -95,15 +96,14 @@ def main() -> int:
         output_name = args.output
         input_name = args.input or output_name
 
-    with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
-        with mido.open_input(input_name, backend="mido.backends.rtmidi") as input_port:
+    with RtMidiPollingInput(input_name) as input_port:
+        with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
             sequence = read_current_sequencer(output, input_port, args.timeout)
-
-    print(json.dumps({
-        "length": sequence.length,
-        "steps": [
-            {"note": step.note, "velocity": step.velocity, "rest": step.is_rest}
-            for step in sequence.steps
-        ],
-    }, indent=2))
+            print(json.dumps({
+                "length": sequence.length,
+                "steps": [
+                    {"note": step.note, "velocity": step.velocity, "rest": step.is_rest}
+                    for step in sequence.steps
+                ],
+            }, indent=2), flush=True)
     return 0
