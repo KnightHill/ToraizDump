@@ -2,6 +2,7 @@ import pytest
 
 from toraiz_dump.protocol import (
     EDIT_BUFFER_RESPONSE,
+    MIN_PACKED_BYTES,
     PACKED_BYTES,
     decode_edit_buffer,
     pack_edit_buffer,
@@ -42,6 +43,32 @@ def test_parse_accepts_mido_payload_without_f0_f7():
     program = make_program()
     payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
     assert parse_edit_buffer_response(payload).length == 16
+
+
+def test_parse_accepts_only_the_data_needed_for_the_sequencer():
+    program = make_program()
+    packed = pack_edit_buffer(program)
+    payload = bytes(EDIT_BUFFER_RESPONSE) + packed[:MIN_PACKED_BYTES]
+
+    sequence = parse_edit_buffer_response(payload)
+
+    assert sequence.length == 16
+    assert sequence.steps[-1].note == 99
+    assert sequence.steps[-1].velocity == 64
+
+
+def test_parse_accepts_trailing_firmware_data():
+    program = make_program()
+    payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program) + b"\x00\x01"
+
+    assert parse_edit_buffer_response(payload).length == 16
+
+
+def test_parse_rejects_response_too_short_for_sequencer():
+    payload = bytes(EDIT_BUFFER_RESPONSE) + b"\x00" * (MIN_PACKED_BYTES - 1)
+
+    with pytest.raises(ValueError, match=rf"too short.*{MIN_PACKED_BYTES - 1}"):
+        parse_edit_buffer_response(payload)
 
 
 @pytest.mark.parametrize("value", [b"", b"\xf0", b"\xf0\x00\xf7"])

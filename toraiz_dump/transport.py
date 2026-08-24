@@ -24,6 +24,7 @@ def read_current_sequencer(
 
     output.send(mido.Message("sysex", data=EDIT_BUFFER_REQUEST))
     deadline = time.monotonic() + timeout
+    last_rejection: str | None = None
     while time.monotonic() < deadline:
         message = input_port.poll()
         if message is None:
@@ -33,7 +34,9 @@ def read_current_sequencer(
             continue
         try:
             return parse_edit_buffer_response(message.data)
-        except ValueError:
+        except ValueError as error:
             # Ignore unrelated SysEx traffic while waiting for the AS-1 reply.
+            last_rejection = f"{error} (received {len(message.data)} payload bytes)"
             continue
-    raise TimeoutError("timed out waiting for the AS-1 edit-buffer response")
+    detail = f"; last SysEx rejected: {last_rejection}" if last_rejection else ""
+    raise TimeoutError(f"timed out waiting for the AS-1 edit-buffer response{detail}")

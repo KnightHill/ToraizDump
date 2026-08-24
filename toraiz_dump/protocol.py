@@ -16,6 +16,8 @@ SEQUENCE_LENGTH_INDEX = 170
 NOTE_START_INDEX = 256
 VELOCITY_START_INDEX = 320
 STEP_COUNT = 64
+SEQUENCER_BYTES = VELOCITY_START_INDEX + STEP_COUNT
+MIN_PACKED_BYTES = SEQUENCER_BYTES + (SEQUENCER_BYTES + 6) // 7
 
 
 @dataclass(frozen=True)
@@ -50,6 +52,12 @@ def decode_edit_buffer(packed: Sequence[int]) -> bytes:
         raise ValueError(
             f"expected {PACKED_BYTES} packed bytes, received {len(packed)}"
         )
+    return _decode_packed_bytes(packed)
+
+
+def _decode_packed_bytes(packed: Sequence[int]) -> bytes:
+    """Decode a possibly partial AS-1 packed-MSB data block."""
+
     if any(not 0 <= byte <= 0x7F for byte in packed):
         raise ValueError("packed SysEx data must contain only 7-bit bytes")
 
@@ -61,7 +69,7 @@ def decode_edit_buffer(packed: Sequence[int]) -> bytes:
             if source >= len(packed):
                 break
             decoded.append(packed[source] | (((msbs >> bit) & 1) << 7))
-    return bytes(decoded[:PROGRAM_BYTES])
+    return bytes(decoded)
 
 
 def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
@@ -79,15 +87,20 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
     elif payload and payload[-1] == 0xF7:
         raise ValueError("payload must not end with F7 unless it starts with F0")
 
-    expected_size = len(EDIT_BUFFER_RESPONSE) + PACKED_BYTES
-    if len(payload) != expected_size:
-        raise ValueError(
-            f"expected {expected_size} response payload bytes, received {len(payload)}"
-        )
     if payload[: len(EDIT_BUFFER_RESPONSE)] != EDIT_BUFFER_RESPONSE:
         raise ValueError("not an AS-1 edit-buffer response")
 
-    program = decode_edit_buffer(payload[len(EDIT_BUFFER_RESPONSE) :])
+    packed = payload[len(EDIT_BUFFER_RESPONSE) :]
+    if len(packed) < MIN_PACKED_BYTES:
+        raise ValueError(
+            "AS-1 edit-buffer response is too short for sequencer data: "
+            f"expected at least {MIN_PACKED_BYTES} packed bytes, received {len(packed)}"
+        )
+
+    # The documented dump contains 1,171 packed bytes, but sequencer parsing
+    # only depends on the first 384 decoded bytes. Accept longer or shorter
+    # firmware variants as long as all sequencer fields are present.
+    program = _decode_packed_bytes(packed)
     length_code = program[SEQUENCE_LENGTH_INDEX]
     if not 0 <= length_code <= 6:
         raise ValueError(f"invalid AS-1 sequence length code: {length_code}")
