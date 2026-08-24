@@ -6,21 +6,30 @@ import time
 
 import mido
 
-from .protocol import EDIT_BUFFER_REQUEST, parse_edit_buffer_response
+from .protocol import (
+    EDIT_BUFFER_REQUEST,
+    SequencerData,
+    parse_edit_buffer_response,
+)
+
+POLL_INTERVAL = 0.01
 
 
 def read_current_sequencer(
     output: mido.ports.BaseOutput,
     input_port: mido.ports.BaseInput,
     timeout: float = 2.0,
-):
+) -> SequencerData:
     """Request and parse the currently selected AS-1 program's sequencer."""
 
     output.send(mido.Message("sysex", data=EDIT_BUFFER_REQUEST))
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
-        message = input_port.receive(block=True, timeout=max(0, deadline - time.monotonic()))
-        if message is None or message.type != "sysex":
+        message = input_port.poll()
+        if message is None:
+            time.sleep(min(POLL_INTERVAL, max(0, deadline - time.monotonic())))
+            continue
+        if message.type != "sysex":
             continue
         try:
             return parse_edit_buffer_response(message.data)

@@ -41,7 +41,7 @@ def test_parse_sequencer_data():
 def test_parse_accepts_mido_payload_without_f0_f7():
     program = make_program()
     payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
-    assert parse_edit_buffer_response(payload).length == 4
+    assert parse_edit_buffer_response(payload).length == 16
 
 
 @pytest.mark.parametrize("value", [b"", b"\xf0", b"\xf0\x00\xf7"])

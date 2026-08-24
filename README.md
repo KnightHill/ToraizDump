@@ -81,7 +81,8 @@ program parameter locations.
 Run the test suite with:
 
 ```bash
-pytest
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/python -m pytest
 ```
 
 The protocol parser can also be used independently of MIDI hardware through

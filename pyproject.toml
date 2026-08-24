@@ -12,6 +12,11 @@ dependencies = [
     "python-rtmidi>=1.5",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
 [project.scripts]
 toraiz-dump = "toraiz_dump.cli:main"
 

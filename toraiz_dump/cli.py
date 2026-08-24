@@ -72,8 +72,12 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.list_ports:
-        for name in mido.get_ioport_names():
-            print(name)
+        print("MIDI input ports:")
+        for name in mido.get_input_names():
+            print(f"  {name}")
+        print("MIDI output ports:")
+        for name in mido.get_output_names():
+            print(f"  {name}")
         return 0
 
     if args.auto and (args.input or args.output):
