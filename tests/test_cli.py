@@ -1,6 +1,8 @@
+import sys
+
 import pytest
 
-from toraiz_dump.cli import autodetect_ports
+from toraiz_dump.cli import autodetect_ports, main
 
 
 def test_autodetects_one_bidirectional_port():
@@ -26,3 +28,12 @@ def test_autodetect_rejects_ambiguous_devices():
             ["TORAIZ AS-1 MIDI In", "TORAIZ AS-1 MIDI In"],
             ["TORAIZ AS-1 MIDI Out", "TORAIZ AS-1 MIDI Out"],
         )
+
+
+def test_version_option(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "argv", ["toraiz-dump", "--version"])
+
+    with pytest.raises(SystemExit, match="0"):
+        main()
+
+    assert capsys.readouterr().out == "toraiz-dump 0.1.0\n"

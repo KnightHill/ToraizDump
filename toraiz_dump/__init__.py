@@ -1,5 +1,7 @@
 """Tools for reading sequencer data from a Pioneer DJ TORAIZ AS-1."""
 
+__version__ = "0.1.0"
+
 from .protocol import (
     EDIT_BUFFER_RESPONSE,
     EDIT_BUFFER_REQUEST,
@@ -10,6 +12,7 @@ from .protocol import (
 )
 
 __all__ = [
+    "__version__",
     "EDIT_BUFFER_REQUEST",
     "EDIT_BUFFER_RESPONSE",
     "SequencerData",

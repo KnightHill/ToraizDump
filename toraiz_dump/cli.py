@@ -7,6 +7,7 @@ import json
 import re
 from collections.abc import Sequence
 
+from . import __version__
 from .ports import RtMidiPollingInput
 from .transport import read_current_sequencer
 
@@ -61,6 +62,11 @@ def main() -> int:
     import mido
 
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
     parser.add_argument("--input", help="MIDI input port (defaults to the output port)")
     parser.add_argument("--output", help="MIDI output port")
     parser.add_argument(

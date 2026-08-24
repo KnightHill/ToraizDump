@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "toraiz-dump"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Dump sequencer data from a Pioneer DJ TORAIZ AS-1"
 requires-python = ">=3.10"
 dependencies = [
@@ -22,6 +22,9 @@ toraiz-dump = "toraiz_dump.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["toraiz_dump*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "toraiz_dump.__version__"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -21,6 +21,12 @@ sure its MIDI SysEx input/output settings allow SysEx communication.
 toraiz-dump --list-ports
 ```
 
+Show the installed version with:
+
+```bash
+toraiz-dump --version
+```
+
 ## Dump the current sequencer
 
 Try automatic TORAIZ port detection:
@@ -59,7 +65,7 @@ The result is printed as JSON:
 }
 ```
 
-`length` is the displayed sequence length: 1, 2, 4, 8, 16, 32, or 64.
+`length` is the displayed sequence length from 1 through 64.
 All 64 step records are returned; only the first `length` steps are active.
 A velocity of `0` represents a rest.
 
@@ -76,8 +82,9 @@ documented as 1,171 MIDI-safe packed bytes. The parser validates the response
 header and reconstructs the bytes needed for the sequencer. It reads the raw
 program layout (length at byte 95, notes at bytes 128–191, and velocities at
 bytes 192–255) rather than treating MIDI NRPN numbers as program offsets. It
-tolerates dump length variations as long as the complete sequencer region is
-present.
+decodes velocity bit 7 as the active-step flag and bits 0–6 as standard MIDI
+velocity. It tolerates dump length variations as long as the complete
+sequencer region is present.
 
 ## Development
 

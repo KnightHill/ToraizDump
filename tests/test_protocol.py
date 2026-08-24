@@ -15,7 +15,7 @@ def make_program():
     program[95] = 15
     for index in range(64):
         program[128 + index] = 36 + index
-        program[192 + index] = 0 if index == 2 else 127 - index
+        program[192 + index] = 0 if index == 2 else 0x80 | (127 - index)
     return program
 
 
@@ -37,6 +37,20 @@ def test_parse_sequencer_data():
     assert sequence.steps[0].velocity == 127
     assert sequence.steps[2].is_rest
     assert len(sequence.steps) == 64
+
+
+def test_velocity_high_bit_marks_an_active_step():
+    program = make_program()
+    program[192] = 0x80 | 100
+    program[193] = 100
+    payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+    sequence = parse_edit_buffer_response(payload)
+
+    assert sequence.steps[0].velocity == 100
+    assert not sequence.steps[0].is_rest
+    assert sequence.steps[1].velocity == 0
+    assert sequence.steps[1].is_rest
 
 
 def test_parse_accepts_mido_payload_without_f0_f7():

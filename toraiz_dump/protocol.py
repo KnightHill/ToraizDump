@@ -108,7 +108,10 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
     steps = tuple(
         SequencerStep(
             note=program[NOTE_START_INDEX + index],
-            velocity=program[VELOCITY_START_INDEX + index],
+            # Bit 7 marks an active step; bits 0-6 hold MIDI velocity.
+            velocity=(program[VELOCITY_START_INDEX + index] & 0x7F)
+            if program[VELOCITY_START_INDEX + index] & 0x80
+            else 0,
         )
         for index in range(STEP_COUNT)
     )
