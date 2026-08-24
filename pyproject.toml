@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "toraiz-dump"
+version = "0.1.0"
+description = "Dump sequencer data from a Pioneer DJ TORAIZ AS-1"
+requires-python = ">=3.10"
+dependencies = [
+    "mido>=1.3",
+    "python-rtmidi>=1.5",
+]
+
+[project.scripts]
+toraiz-dump = "toraiz_dump.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["toraiz_dump*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
