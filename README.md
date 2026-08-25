@@ -124,8 +124,7 @@ sequencer region is present.
 Run the test suite with:
 
 ```bash
-.venv/bin/python -m pip install -e '.[dev]'
-.venv/bin/python -m pytest
+.venv/bin/python -m unittest discover -s tests
 ```
 
 The protocol parser can also be used independently of MIDI hardware through
