@@ -1,5 +1,6 @@
+import unittest
+
 import mido
-import pytest
 
 from toraiz_dump.ports import RtMidiPollingInput
 
@@ -29,25 +30,33 @@ class FakeMidiIn:
         self.calls.append(("delete",))
 
 
-def test_polling_input_receives_sysex_without_a_callback():
-    midi_in = FakeMidiIn(events=[([0xF0, 1, 2, 3, 0xF7], 0.0)])
+class PortsTests(unittest.TestCase):
+    def test_polling_input_receives_sysex_without_a_callback(self):
+        midi_in = FakeMidiIn(events=[([0xF0, 1, 2, 3, 0xF7], 0.0)])
 
-    with RtMidiPollingInput("TORAIZ AS-1", midi_in=midi_in) as port:
-        assert port.poll() == mido.Message("sysex", data=(1, 2, 3))
-        assert port.poll() is None
+        with RtMidiPollingInput("TORAIZ AS-1", midi_in=midi_in) as port:
+            self.assertEqual(port.poll(), mido.Message("sysex", data=(1, 2, 3)))
+            self.assertIsNone(port.poll())
 
-    assert ("ignore_types", {
-        "sysex": False,
-        "timing": True,
-        "active_sense": True,
-    }) in midi_in.calls
-    assert midi_in.calls[-2:] == [("close_port",), ("delete",)]
+        self.assertIn(
+            (
+                "ignore_types",
+                {"sysex": False, "timing": True, "active_sense": True},
+            ),
+            midi_in.calls,
+        )
+        self.assertEqual(midi_in.calls[-2:], [("close_port",), ("delete",)])
+
+    def test_polling_input_rejects_an_unknown_port(self):
+        midi_in = FakeMidiIn(ports=("Other MIDI",))
+
+        with self.assertRaisesRegex(
+            OSError, "unknown MIDI input port.*Other MIDI"
+        ):
+            RtMidiPollingInput("TORAIZ AS-1", midi_in=midi_in)
+
+        self.assertEqual(midi_in.calls, [("delete",)])
 
 
-def test_polling_input_rejects_an_unknown_port():
-    midi_in = FakeMidiIn(ports=("Other MIDI",))
-
-    with pytest.raises(OSError, match="unknown MIDI input port.*Other MIDI"):
-        RtMidiPollingInput("TORAIZ AS-1", midi_in=midi_in)
-
-    assert midi_in.calls == [("delete",)]
+if __name__ == "__main__":
+    unittest.main()
