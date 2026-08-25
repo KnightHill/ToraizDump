@@ -121,11 +121,18 @@ sequencer region is present.
 
 ## Development
 
-Run the test suite with:
+The test suite uses Python's built-in `unittest` framework, so no separate
+test runner or development dependencies are required. From the project root,
+run:
 
 ```bash
-.venv/bin/python -m pip install -e '.[dev]'
-.venv/bin/python -m pytest
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+To run one test module, pass its dotted module name:
+
+```bash
+.venv/bin/python -m unittest tests.test_protocol -v
 ```
 
 The protocol parser can also be used independently of MIDI hardware through
