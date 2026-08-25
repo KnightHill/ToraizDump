@@ -36,4 +36,4 @@ def test_version_option(monkeypatch, capsys):
     with pytest.raises(SystemExit, match="0"):
         main()
 
-    assert capsys.readouterr().out == "toraiz-dump 0.1.0\n"
+    assert capsys.readouterr().out == "toraiz-dump 0.2.0\n"

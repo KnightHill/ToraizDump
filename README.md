@@ -15,21 +15,16 @@ python -m pip install -e .
 The AS-1 must be connected over USB MIDI or through a MIDI interface. Make
 sure its MIDI SysEx input/output settings allow SysEx communication.
 
-## Find MIDI ports
+## Basic commands
 
 ```bash
 toraiz-dump --list-ports
-```
-
-Show the installed version with:
-
-```bash
 toraiz-dump --version
 ```
 
-## Dump the current sequencer
+## Select MIDI ports
 
-Try automatic TORAIZ port detection:
+Automatic detection is the simplest option:
 
 ```bash
 toraiz-dump --auto
@@ -39,21 +34,37 @@ toraiz-dump --auto
 `AS1`, and pairs ports with matching names. If more than one device matches,
 specify the ports explicitly.
 
-When the device uses the same port for MIDI input and output:
-
-```bash
-toraiz-dump --output "TORAIZ AS-1"
-```
-
-With separate ports:
+Use `--list-ports`, then copy the complete names into `--midi-input` and
+`--midi-output`. ALSA commonly exposes one bidirectional name, in which case
+use that same name for both options:
 
 ```bash
 toraiz-dump \
-  --output "TORAIZ AS-1 MIDI Out" \
-  --input "TORAIZ AS-1 MIDI In"
+  --midi-input "Toraiz AS-1:Toraiz AS-1 MIDI 1 28:0" \
+  --midi-output "Toraiz AS-1:Toraiz AS-1 MIDI 1 28:0"
 ```
 
-The result is printed as JSON:
+When input and output have different names:
+
+```bash
+toraiz-dump \
+  --midi-input "TORAIZ AS-1 MIDI In" \
+  --midi-output "TORAIZ AS-1 MIDI Out"
+```
+
+`--midi-input` defaults to the `--midi-output` value when it is omitted.
+
+## Output formats
+
+JSON is the default. These commands are equivalent:
+
+```bash
+toraiz-dump --auto
+toraiz-dump --auto --output json
+toraiz-dump --auto -o json
+```
+
+JSON is printed to the terminal and contains all 64 step records:
 
 ```json
 {
@@ -68,6 +79,28 @@ The result is printed as JSON:
 `length` is the displayed sequence length from 1 through 64.
 All 64 step records are returned; only the first `length` steps are active.
 A velocity of `0` represents a rest.
+
+To save JSON to a file:
+
+```bash
+toraiz-dump --auto > sequence.json
+```
+
+Select MIDI output and redirect the binary data to a `.mid` file:
+
+```bash
+toraiz-dump --auto --output midi > sequence.mid
+# Short form:
+toraiz-dump --auto -o midi > sequence.mid
+```
+
+The MIDI file uses one 16th-note slot per sequencer step at 120 BPM. Its tempo
+can be changed normally in a DAW or MIDI editor. MIDI output contains only the
+active number of steps and must be redirected to a file rather than displayed
+in the terminal.
+
+Other useful options are `--timeout SECONDS`, `--list-ports`, and `--version`.
+Run `toraiz-dump --help` for the complete command-line reference.
 
 ## Protocol
 

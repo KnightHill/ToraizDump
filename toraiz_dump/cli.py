@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from collections.abc import Sequence
 
 from . import __version__
+from .output import sequence_as_dict, write_midi
 from .ports import RtMidiPollingInput
 from .transport import read_current_sequencer
 
@@ -39,7 +41,7 @@ def autodetect_ports(
     if not inputs or not outputs:
         raise RuntimeError(
             "could not find both TORAIZ MIDI input and output ports; "
-            "use --list-ports or specify --input and --output"
+            "use --list-ports or specify --midi-input and --midi-output"
         )
 
     pairs: list[tuple[int, str, str]] = []
@@ -53,7 +55,8 @@ def autodetect_ports(
     best = pairs[0]
     if len(pairs) > 1 and pairs[1][0] == best[0]:
         raise RuntimeError(
-            "multiple TORAIZ MIDI port pairs found; specify --input and --output"
+            "multiple TORAIZ MIDI port pairs found; "
+            "specify --midi-input and --midi-output"
         )
     return best[1], best[2]
 
@@ -67,8 +70,18 @@ def main() -> int:
         action="version",
         version=f"%(prog)s {__version__}",
     )
-    parser.add_argument("--input", help="MIDI input port (defaults to the output port)")
-    parser.add_argument("--output", help="MIDI output port")
+    parser.add_argument(
+        "--midi-input",
+        help="MIDI input port (defaults to the MIDI output port)",
+    )
+    parser.add_argument("--midi-output", help="MIDI output port")
+    parser.add_argument(
+        "-o",
+        "--output",
+        choices=("json", "midi"),
+        default="json",
+        help="output format (default: json)",
+    )
     parser.add_argument(
         "--auto",
         action="store_true",
@@ -87,8 +100,8 @@ def main() -> int:
             print(f"  {name}")
         return 0
 
-    if args.auto and (args.input or args.output):
-        parser.error("--auto cannot be combined with --input or --output")
+    if args.auto and (args.midi_input or args.midi_output):
+        parser.error("--auto cannot be combined with --midi-input or --midi-output")
     if args.auto:
         try:
             input_name, output_name = autodetect_ports(
@@ -97,19 +110,17 @@ def main() -> int:
         except RuntimeError as error:
             parser.error(str(error))
     else:
-        if not args.output:
-            parser.error("--output, --auto, or --list-ports is required")
-        output_name = args.output
-        input_name = args.input or output_name
+        if not args.midi_output:
+            parser.error("--midi-output, --auto, or --list-ports is required")
+        output_name = args.midi_output
+        input_name = args.midi_input or output_name
 
     with RtMidiPollingInput(input_name) as input_port:
         with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
             sequence = read_current_sequencer(output, input_port, args.timeout)
-            print(json.dumps({
-                "length": sequence.length,
-                "steps": [
-                    {"note": step.note, "velocity": step.velocity, "rest": step.is_rest}
-                    for step in sequence.steps
-                ],
-            }, indent=2), flush=True)
+            if args.output == "midi":
+                write_midi(sequence, sys.stdout.buffer)
+                sys.stdout.buffer.flush()
+            else:
+                print(json.dumps(sequence_as_dict(sequence), indent=2), flush=True)
     return 0
