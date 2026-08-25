@@ -99,6 +99,20 @@ can be changed normally in a DAW or MIDI editor. MIDI output contains only the
 active number of steps and must be redirected to a file rather than displayed
 in the terminal.
 
+Play a saved MIDI file with `amidiplay`:
+
+```bash
+amidiplay sequence.mid
+```
+
+If the receiving device uses a different MIDI channel, remap the file before
+playing it. Channels are numbered 1 through 16:
+
+```bash
+python remap_midi_channel.py sequence.mid sequence-ch5.mid --channel 5
+amidiplay sequence-ch5.mid
+```
+
 Other useful options are `--timeout SECONDS`, `--list-ports`, and `--version`.
 Run `toraiz-dump --help` for the complete command-line reference.
 
