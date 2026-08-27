@@ -66,6 +66,10 @@ toraiz-dump --auto --format json --output sequence.json
 toraiz-dump --auto -f json -o sequence.json
 ```
 
+Every dump also prints the sequence length and a compact visual display of the
+steps to the terminal. Filled boxes (`■`) are active steps, empty boxes (`□`)
+are rests, and tied active steps are glued together.
+
 The JSON file contains the active step records:
 
 ```json

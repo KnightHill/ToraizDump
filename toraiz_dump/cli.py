@@ -8,7 +8,7 @@ import re
 from collections.abc import Sequence
 
 from . import __version__
-from .output import sequence_as_dict, write_midi
+from .output import sequence_as_dict, sequence_as_display, write_midi
 from .ports import RtMidiPollingInput
 from .transport import read_current_sequencer
 
@@ -133,4 +133,5 @@ def main() -> int:
                 with open(args.output, "w", encoding="utf-8") as output_file:
                     json.dump(sequence_as_dict(sequence), output_file, indent=2)
                     output_file.write("\n")
+            print(sequence_as_display(sequence), flush=True)
     return 0

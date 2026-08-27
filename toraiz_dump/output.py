@@ -30,6 +30,16 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
     }
 
 
+def sequence_as_display(sequence: SequencerData) -> str:
+    """Return a compact visual representation of the active sequence steps."""
+
+    boxes: list[str] = []
+    for index, step in enumerate(sequence.steps[: sequence.length]):
+        separator = "" if index and step.tie else ("│" if index and index % 4 == 0 else "")
+        boxes.append(f"{separator}{'□' if step.is_rest else '■'}")
+    return f"Length: {sequence.length}\n{''.join(boxes)}"
+
+
 def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
     """Write the active AS-1 sequence as a type-0 Standard MIDI File."""
 

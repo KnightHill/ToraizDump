@@ -3,7 +3,12 @@ from io import BytesIO
 
 import mido
 
-from toraiz_dump.output import STEP_TICKS, sequence_as_dict, write_midi
+from toraiz_dump.output import (
+    STEP_TICKS,
+    sequence_as_dict,
+    sequence_as_display,
+    write_midi,
+)
 from toraiz_dump.protocol import SequencerData, SequencerStep
 
 
@@ -83,6 +88,29 @@ class OutputTests(unittest.TestCase):
                 ("note_off", 64, STEP_TICKS),
             ],
         )
+
+    def test_sequence_as_display_glues_tied_steps(self):
+        sequence = SequencerData(
+            length=4,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=60, velocity=100, tie=True),
+                SequencerStep(note=0, velocity=0),
+                SequencerStep(note=64, velocity=90),
+            ),
+            raw_length=3,
+        )
+
+        self.assertEqual(sequence_as_display(sequence), "Length: 4\n■■□■")
+
+    def test_sequence_as_display_separates_four_step_groups(self):
+        sequence = SequencerData(
+            length=5,
+            steps=tuple(SequencerStep(note=60, velocity=100) for _ in range(5)),
+            raw_length=4,
+        )
+
+        self.assertEqual(sequence_as_display(sequence), "Length: 5\n■■■■│■")
 
 
 if __name__ == "__main__":
