@@ -11,9 +11,6 @@ from .protocol import SequencerData
 TICKS_PER_BEAT = 480
 STEP_TICKS = TICKS_PER_BEAT // 4
 DEFAULT_TEMPO = 500_000  # 120 BPM
-NOTE_COLOR = ""
-REST_COLOR = "\033[90m"
-COLOR_RESET = "\033[0m"
 
 
 def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
@@ -43,12 +40,9 @@ def sequence_as_display(sequence: SequencerData) -> str:
     boxes: list[str] = []
     for index, step in enumerate(sequence.steps[: sequence.length]):
         if step.tie and index:
-            if sequence.steps[index - 1].is_rest:
-                boxes[index - 1] = f"{REST_COLOR}█{COLOR_RESET}"
-            else:
-                boxes[index - 1] = "█"
+            boxes[index - 1] = "█"
         if step.is_rest:
-            boxes.append(f"{REST_COLOR}▉{COLOR_RESET}")
+            boxes.append("░")
         else:
             boxes.append("▉")
 
