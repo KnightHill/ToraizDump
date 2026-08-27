@@ -11,6 +11,8 @@ from .protocol import SequencerData
 TICKS_PER_BEAT = 480
 STEP_TICKS = TICKS_PER_BEAT // 4
 DEFAULT_TEMPO = 500_000  # 120 BPM
+ANSI_DARK_GRAY = "\033[90m"
+ANSI_RESET = "\033[0m"
 
 
 def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
@@ -31,17 +33,26 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
 
 
 def sequence_as_display(sequence: SequencerData) -> str:
-    """Return a compact visual representation of the active sequence steps."""
+    """Return a compact visual representation of the active sequence steps.
+
+    A regular note occupies seven eighths of its cell.  A tie on the current
+    step extends the preceding note to a full cell.
+    """
 
     boxes: list[str] = []
     for index, step in enumerate(sequence.steps[: sequence.length]):
-        separator = "│" if index and index % 4 == 0 else ""
-        if step.tie:
-            box = "□" if step.is_rest else "■"
+        if step.tie and index:
+            if sequence.steps[index - 1].is_rest:
+                boxes[index - 1] = f"{ANSI_DARK_GRAY}█{ANSI_RESET}"
+            else:
+                boxes[index - 1] = "█"
+        if step.is_rest:
+            boxes.append(f"{ANSI_DARK_GRAY}▉{ANSI_RESET}")
         else:
-            box = "○" if step.is_rest else "●"
-        boxes.append(f"{separator}{box}")
-    return f"Length: {sequence.length}\n{''.join(boxes)}"
+            boxes.append("▉")
+
+    display = "".join(boxes)
+    return f"Length: {sequence.length}\n{display}"
 
 
 def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
