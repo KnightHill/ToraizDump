@@ -11,6 +11,9 @@ from .protocol import SequencerData
 TICKS_PER_BEAT = 480
 STEP_TICKS = TICKS_PER_BEAT // 4
 DEFAULT_TEMPO = 500_000  # 120 BPM
+GROUP_RED = "\033[31m"
+GROUP_ORANGE = "\033[38;5;208m"
+COLOR_RESET = "\033[0m"
 
 
 def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
@@ -34,7 +37,8 @@ def sequence_as_display(sequence: SequencerData) -> str:
     """Return a compact visual representation of the active sequence steps.
 
     A regular note occupies seven eighths of its cell.  A tie on the current
-    step extends the preceding note to a full cell.
+    step extends the preceding note to a full cell.  The line below the steps
+    marks groups of four with alternating red and orange upper eighth blocks.
     """
 
     boxes: list[str] = []
@@ -47,7 +51,12 @@ def sequence_as_display(sequence: SequencerData) -> str:
             boxes.append("▉")
 
     display = "".join(boxes)
-    return f"Length: {sequence.length}\n{display}"
+    group_line = "".join(
+        f"{GROUP_RED if group % 2 == 0 else GROUP_ORANGE}"
+        f"{'▔' * min(4, len(boxes) - group * 4)}{COLOR_RESET}"
+        for group in range((len(boxes) + 3) // 4)
+    )
+    return f"Length: {sequence.length}\n{display}\n{group_line}"
 
 
 def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
