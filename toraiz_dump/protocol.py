@@ -26,6 +26,7 @@ class SequencerStep:
 
     note: int
     velocity: int
+    tie: bool = False
 
     @property
     def is_rest(self) -> bool:
@@ -107,11 +108,12 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
 
     steps = tuple(
         SequencerStep(
-            note=program[NOTE_START_INDEX + index],
+            note=program[NOTE_START_INDEX + index] & 0x7F,
             # Bit 7 marks an active step; bits 0-6 hold MIDI velocity.
             velocity=(program[VELOCITY_START_INDEX + index] & 0x7F)
             if program[VELOCITY_START_INDEX + index] & 0x80
             else 0,
+            tie=bool(program[NOTE_START_INDEX + index] & 0x80),
         )
         for index in range(STEP_COUNT)
     )

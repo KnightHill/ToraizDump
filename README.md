@@ -22,12 +22,15 @@ toraiz-dump --list-ports
 toraiz-dump --version
 ```
 
+Dump commands require `-o`/`--output` to specify the file where the result is
+saved.
+
 ## Select MIDI ports
 
 Automatic detection is the simplest option:
 
 ```bash
-toraiz-dump --auto
+toraiz-dump --auto --output sequence.json
 ```
 
 `--auto` searches MIDI input and output port names for `TORAIZ`, `AS-1`, or
@@ -59,12 +62,16 @@ toraiz-dump \
 JSON is the default. These commands are equivalent:
 
 ```bash
-toraiz-dump --auto
-toraiz-dump --auto --output json
-toraiz-dump --auto -o json
+toraiz-dump --auto --format json --output sequence.json
+toraiz-dump --auto -f json -o sequence.json
 ```
 
-JSON is printed to the terminal and contains all 64 step records:
+Every dump also prints the sequence length and a compact visual display of the
+steps to the terminal. Filled circles (`●`) are regular active steps, empty
+circles (`○`) are regular rests, filled squares (`■`) are tied active steps,
+and empty squares (`□`) are tied rests.
+
+The JSON file contains the active step records:
 
 ```json
 {
@@ -77,27 +84,27 @@ JSON is printed to the terminal and contains all 64 step records:
 ```
 
 `length` is the displayed sequence length from 1 through 64.
-All 64 step records are returned; only the first `length` steps are active.
+Only the first `length` step records are returned.
 A velocity of `0` represents a rest.
+`tie` is `true` when the step sustains the note from the previous step.
 
 To save JSON to a file:
 
 ```bash
-toraiz-dump --auto > sequence.json
+toraiz-dump --auto --output sequence.json
 ```
 
-Select MIDI output and redirect the binary data to a `.mid` file:
+Select MIDI output and save it to a `.mid` file:
 
 ```bash
-toraiz-dump --auto --output midi > sequence.mid
+toraiz-dump --auto --format midi --output sequence.mid
 # Short form:
-toraiz-dump --auto -o midi > sequence.mid
+toraiz-dump --auto -f midi -o sequence.mid
 ```
 
 The MIDI file uses one 16th-note slot per sequencer step at 120 BPM. Its tempo
 can be changed normally in a DAW or MIDI editor. MIDI output contains only the
-active number of steps and must be redirected to a file rather than displayed
-in the terminal.
+active number of steps and is saved to the file specified by `--output`.
 
 Play a saved MIDI file with `amidiplay`:
 
@@ -129,9 +136,10 @@ documented as 1,171 MIDI-safe packed bytes. The parser validates the response
 header and reconstructs the bytes needed for the sequencer. It reads the raw
 program layout (length at byte 95, notes at bytes 128–191, and velocities at
 bytes 192–255) rather than treating MIDI NRPN numbers as program offsets. It
-decodes velocity bit 7 as the active-step flag and bits 0–6 as standard MIDI
-velocity. It tolerates dump length variations as long as the complete
-sequencer region is present.
+decodes bit 7 of each note byte as the tie flag and bits 0–6 as the MIDI note
+number. It decodes velocity bit 7 as the active-step flag and bits 0–6 as
+standard MIDI velocity. It tolerates dump length variations as long as the
+complete sequencer region is present.
 
 ## Development
 

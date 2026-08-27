@@ -1,6 +1,6 @@
 """Tools for reading sequencer data from a Pioneer DJ TORAIZ AS-1."""
 
-__version__ = "0.2.1"
+__version__ = "0.2.4"
 
 from .protocol import (
     EDIT_BUFFER_RESPONSE,
