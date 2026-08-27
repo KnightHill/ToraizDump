@@ -79,6 +79,7 @@ JSON is printed to the terminal and contains the active step records:
 `length` is the displayed sequence length from 1 through 64.
 Only the first `length` step records are returned.
 A velocity of `0` represents a rest.
+`tie` is `true` when the step sustains the note from the previous step.
 
 To save JSON to a file:
 
@@ -129,9 +130,10 @@ documented as 1,171 MIDI-safe packed bytes. The parser validates the response
 header and reconstructs the bytes needed for the sequencer. It reads the raw
 program layout (length at byte 95, notes at bytes 128–191, and velocities at
 bytes 192–255) rather than treating MIDI NRPN numbers as program offsets. It
-decodes velocity bit 7 as the active-step flag and bits 0–6 as standard MIDI
-velocity. It tolerates dump length variations as long as the complete
-sequencer region is present.
+decodes bit 7 of each note byte as the tie flag and bits 0–6 as the MIDI note
+number. It decodes velocity bit 7 as the active-step flag and bits 0–6 as
+standard MIDI velocity. It tolerates dump length variations as long as the
+complete sequencer region is present.
 
 ## Development
 

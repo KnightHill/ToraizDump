@@ -51,6 +51,16 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(sequence.steps[1].velocity, 0)
         self.assertTrue(sequence.steps[1].is_rest)
 
+    def test_note_high_bit_marks_a_tie(self):
+        program = make_program()
+        program[128] = 0x80 | 60
+        payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+        step = parse_edit_buffer_response(payload).steps[0]
+
+        self.assertEqual(step.note, 60)
+        self.assertTrue(step.tie)
+
     def test_parse_accepts_mido_payload_without_f0_f7(self):
         program = make_program()
         payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)

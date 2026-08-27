@@ -28,7 +28,8 @@ class OutputTests(unittest.TestCase):
         self.assertEqual(value["length"], 4)
         self.assertEqual(len(value["steps"]), 4)
         self.assertEqual(
-            value["steps"][1], {"note": 0, "velocity": 0, "rest": True}
+            value["steps"][1],
+            {"note": 0, "velocity": 0, "rest": True, "tie": False},
         )
 
     def test_write_midi_uses_sixteenth_note_steps_and_rests(self):
@@ -53,6 +54,33 @@ class OutputTests(unittest.TestCase):
                 ("note_off", 64, 0, STEP_TICKS),
                 ("note_on", 67, 80, 0),
                 ("note_off", 67, 0, STEP_TICKS),
+            ],
+        )
+
+    def test_write_midi_sustains_tied_steps(self):
+        sequence = SequencerData(
+            length=3,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=60, velocity=100, tie=True),
+                SequencerStep(note=64, velocity=90),
+            ),
+            raw_length=2,
+        )
+        output = BytesIO()
+
+        write_midi(sequence, output)
+        output.seek(0)
+        messages = [message for message in mido.MidiFile(file=output).tracks[0]
+                    if not message.is_meta]
+
+        self.assertEqual(
+            [(message.type, message.note, message.time) for message in messages],
+            [
+                ("note_on", 60, 0),
+                ("note_off", 60, STEP_TICKS * 2),
+                ("note_on", 64, 0),
+                ("note_off", 64, STEP_TICKS),
             ],
         )
 

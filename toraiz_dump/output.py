@@ -19,7 +19,12 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
     return {
         "length": sequence.length,
         "steps": [
-            {"note": step.note, "velocity": step.velocity, "rest": step.is_rest}
+            {
+                "note": step.note,
+                "velocity": step.velocity,
+                "rest": step.is_rest,
+                "tie": step.tie,
+            }
             for step in sequence.steps[: sequence.length]
         ],
     }
@@ -34,24 +39,38 @@ def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
     track.append(mido.MetaMessage("track_name", name="TORAIZ AS-1 Sequence"))
     track.append(mido.MetaMessage("set_tempo", tempo=DEFAULT_TEMPO))
 
-    pending_ticks = 0
-    for step in sequence.steps[: sequence.length]:
-        if step.is_rest:
-            pending_ticks += STEP_TICKS
+    events: list[tuple[int, mido.Message]] = []
+    active_note: int | None = None
+    for index, step in enumerate(sequence.steps[: sequence.length]):
+        position = index * STEP_TICKS
+        if step.tie and active_note is not None:
             continue
-        track.append(mido.Message(
-            "note_on",
-            note=step.note,
-            velocity=step.velocity,
-            time=pending_ticks,
-        ))
-        track.append(mido.Message(
-            "note_off",
-            note=step.note,
-            velocity=0,
-            time=STEP_TICKS,
-        ))
-        pending_ticks = 0
+        if step.is_rest:
+            if active_note is not None:
+                events.append((position, mido.Message(
+                    "note_off", note=active_note, velocity=0,
+                )))
+                active_note = None
+            continue
+        if active_note is not None:
+            events.append((position, mido.Message(
+                "note_off", note=active_note, velocity=0,
+            )))
+        events.append((position, mido.Message(
+            "note_on", note=step.note, velocity=step.velocity,
+        )))
+        active_note = step.note
 
-    track.append(mido.MetaMessage("end_of_track", time=pending_ticks))
+    end_position = sequence.length * STEP_TICKS
+    if active_note is not None:
+        events.append((end_position, mido.Message(
+            "note_off", note=active_note, velocity=0,
+        )))
+
+    previous_position = 0
+    for position, message in events:
+        message.time = position - previous_position
+        track.append(message)
+        previous_position = position
+    track.append(mido.MetaMessage("end_of_track", time=end_position - previous_position))
     midi_file.save(file=file)
