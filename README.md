@@ -22,12 +22,15 @@ toraiz-dump --list-ports
 toraiz-dump --version
 ```
 
+Dump commands require `-o`/`--output` to specify the file where the result is
+saved.
+
 ## Select MIDI ports
 
 Automatic detection is the simplest option:
 
 ```bash
-toraiz-dump --auto
+toraiz-dump --auto --output sequence.json
 ```
 
 `--auto` searches MIDI input and output port names for `TORAIZ`, `AS-1`, or
@@ -59,12 +62,11 @@ toraiz-dump \
 JSON is the default. These commands are equivalent:
 
 ```bash
-toraiz-dump --auto
-toraiz-dump --auto --output json
-toraiz-dump --auto -o json
+toraiz-dump --auto --format json --output sequence.json
+toraiz-dump --auto -f json -o sequence.json
 ```
 
-JSON is printed to the terminal and contains the active step records:
+The JSON file contains the active step records:
 
 ```json
 {
@@ -84,21 +86,20 @@ A velocity of `0` represents a rest.
 To save JSON to a file:
 
 ```bash
-toraiz-dump --auto > sequence.json
+toraiz-dump --auto --output sequence.json
 ```
 
-Select MIDI output and redirect the binary data to a `.mid` file:
+Select MIDI output and save it to a `.mid` file:
 
 ```bash
-toraiz-dump --auto --output midi > sequence.mid
+toraiz-dump --auto --format midi --output sequence.mid
 # Short form:
-toraiz-dump --auto -o midi > sequence.mid
+toraiz-dump --auto -f midi -o sequence.mid
 ```
 
 The MIDI file uses one 16th-note slot per sequencer step at 120 BPM. Its tempo
 can be changed normally in a DAW or MIDI editor. MIDI output contains only the
-active number of steps and must be redirected to a file rather than displayed
-in the terminal.
+active number of steps and is saved to the file specified by `--output`.
 
 Play a saved MIDI file with `amidiplay`:
 

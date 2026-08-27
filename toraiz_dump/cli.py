@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sys
 from collections.abc import Sequence
 
 from . import __version__
@@ -76,11 +75,17 @@ def main() -> int:
     )
     parser.add_argument("--midi-output", help="MIDI output port")
     parser.add_argument(
-        "-o",
-        "--output",
+        "-f",
+        "--format",
         choices=("json", "midi"),
         default="json",
         help="output format (default: json)",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        metavar="FILE",
+        help="file in which to save the dump (required unless listing ports)",
     )
     parser.add_argument(
         "--auto",
@@ -100,6 +105,9 @@ def main() -> int:
             print(f"  {name}")
         return 0
 
+    if not args.output:
+        parser.error("-o/--output is required when saving a dump")
+
     if args.auto and (args.midi_input or args.midi_output):
         parser.error("--auto cannot be combined with --midi-input or --midi-output")
     if args.auto:
@@ -118,9 +126,11 @@ def main() -> int:
     with RtMidiPollingInput(input_name) as input_port:
         with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
             sequence = read_current_sequencer(output, input_port, args.timeout)
-            if args.output == "midi":
-                write_midi(sequence, sys.stdout.buffer)
-                sys.stdout.buffer.flush()
+            if args.format == "midi":
+                with open(args.output, "wb") as output_file:
+                    write_midi(sequence, output_file)
             else:
-                print(json.dumps(sequence_as_dict(sequence), indent=2), flush=True)
+                with open(args.output, "w", encoding="utf-8") as output_file:
+                    json.dump(sequence_as_dict(sequence), output_file, indent=2)
+                    output_file.write("\n")
     return 0
