@@ -101,7 +101,7 @@ class OutputTests(unittest.TestCase):
             raw_length=3,
         )
 
-        self.assertEqual(sequence_as_display(sequence), "Length: 4\n■■□■")
+        self.assertEqual(sequence_as_display(sequence), "Length: 4\n●■○●")
 
     def test_sequence_as_display_separates_four_step_groups(self):
         sequence = SequencerData(
@@ -110,7 +110,7 @@ class OutputTests(unittest.TestCase):
             raw_length=4,
         )
 
-        self.assertEqual(sequence_as_display(sequence), "Length: 5\n■■■■│■")
+        self.assertEqual(sequence_as_display(sequence), "Length: 5\n●●●●│●")
 
 
 if __name__ == "__main__":

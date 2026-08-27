@@ -35,8 +35,12 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
     boxes: list[str] = []
     for index, step in enumerate(sequence.steps[: sequence.length]):
-        separator = "" if index and step.tie else ("│" if index and index % 4 == 0 else "")
-        boxes.append(f"{separator}{'□' if step.is_rest else '■'}")
+        separator = "│" if index and index % 4 == 0 else ""
+        if step.tie:
+            box = "□" if step.is_rest else "■"
+        else:
+            box = "○" if step.is_rest else "●"
+        boxes.append(f"{separator}{box}")
     return f"Length: {sequence.length}\n{''.join(boxes)}"
 
 
