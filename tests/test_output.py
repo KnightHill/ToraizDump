@@ -101,16 +101,24 @@ class OutputTests(unittest.TestCase):
             raw_length=3,
         )
 
-        self.assertEqual(sequence_as_display(sequence), "Length: 4\n●■○●")
+        self.assertEqual(
+            sequence_as_display(sequence),
+            "Length: 4\n█▉░▉\n\033[38;2;255;0;0m▔▔▔▔\033[0m",
+        )
 
-    def test_sequence_as_display_separates_four_step_groups(self):
+    def test_sequence_as_display_colors_four_step_groups(self):
         sequence = SequencerData(
             length=5,
             steps=tuple(SequencerStep(note=60, velocity=100) for _ in range(5)),
             raw_length=4,
         )
 
-        self.assertEqual(sequence_as_display(sequence), "Length: 5\n●●●●│●")
+        self.assertEqual(
+            sequence_as_display(sequence),
+            "Length: 5\n▉▉▉▉▉\n"
+            "\033[38;2;255;0;0m▔▔▔▔\033[0m"
+            "\033[93m▔\033[0m",
+        )
 
 
 if __name__ == "__main__":

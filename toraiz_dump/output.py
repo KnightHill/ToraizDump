@@ -11,8 +11,8 @@ from .protocol import SequencerData
 TICKS_PER_BEAT = 480
 STEP_TICKS = TICKS_PER_BEAT // 4
 DEFAULT_TEMPO = 500_000  # 120 BPM
-GROUP_RED = "\033[31m"
-GROUP_ORANGE = "\033[38;5;208m"
+GROUP_RED = "\033[38;2;255;0;0m"
+GROUP_YELLOW = "\033[93m"
 COLOR_RESET = "\033[0m"
 
 
@@ -52,7 +52,7 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
     display = "".join(boxes)
     group_line = "".join(
-        f"{GROUP_RED if group % 2 == 0 else GROUP_ORANGE}"
+        f"{GROUP_RED if group % 2 == 0 else GROUP_YELLOW}"
         f"{'▔' * min(4, len(boxes) - group * 4)}{COLOR_RESET}"
         for group in range((len(boxes) + 3) // 4)
     )
