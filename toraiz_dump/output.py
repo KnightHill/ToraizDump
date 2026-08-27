@@ -20,7 +20,7 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
         "length": sequence.length,
         "steps": [
             {"note": step.note, "velocity": step.velocity, "rest": step.is_rest}
-            for step in sequence.steps
+            for step in sequence.steps[: sequence.length]
         ],
     }
 

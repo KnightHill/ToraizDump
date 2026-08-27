@@ -22,10 +22,11 @@ def make_sequence():
 
 
 class OutputTests(unittest.TestCase):
-    def test_sequence_as_dict_preserves_all_steps(self):
+    def test_sequence_as_dict_returns_active_steps(self):
         value = sequence_as_dict(make_sequence())
 
         self.assertEqual(value["length"], 4)
+        self.assertEqual(len(value["steps"]), 4)
         self.assertEqual(
             value["steps"][1], {"note": 0, "velocity": 0, "rest": True}
         )

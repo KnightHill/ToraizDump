@@ -64,7 +64,7 @@ toraiz-dump --auto --output json
 toraiz-dump --auto -o json
 ```
 
-JSON is printed to the terminal and contains all 64 step records:
+JSON is printed to the terminal and contains the active step records:
 
 ```json
 {
@@ -77,7 +77,7 @@ JSON is printed to the terminal and contains all 64 step records:
 ```
 
 `length` is the displayed sequence length from 1 through 64.
-All 64 step records are returned; only the first `length` steps are active.
+Only the first `length` step records are returned.
 A velocity of `0` represents a rest.
 
 To save JSON to a file:
