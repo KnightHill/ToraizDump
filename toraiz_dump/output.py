@@ -11,8 +11,8 @@ from .protocol import SequencerData
 TICKS_PER_BEAT = 480
 STEP_TICKS = TICKS_PER_BEAT // 4
 DEFAULT_TEMPO = 500_000  # 120 BPM
-GROUP_RED = "\033[38;2;255;0;0m"
-GROUP_YELLOW = "\033[93m"
+GROUP_BLUE = "\033[38;2;80;160;255m"
+GROUP_PURPLE = "\033[38;2;180;120;255m"
 COLOR_RESET = "\033[0m"
 
 
@@ -38,7 +38,7 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
     A regular note occupies seven eighths of its cell.  A tie on the current
     step extends the preceding note to a full cell.  The line below the steps
-    marks groups of four with alternating red and orange upper eighth blocks.
+    marks groups of four with alternating blue and purple upper eighth blocks.
     """
 
     boxes: list[str] = []
@@ -52,7 +52,7 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
     display = "".join(boxes)
     group_line = "".join(
-        f"{GROUP_RED if group % 2 == 0 else GROUP_YELLOW}"
+        f"{GROUP_BLUE if group % 2 == 0 else GROUP_PURPLE}"
         f"{'▔' * min(4, len(boxes) - group * 4)}{COLOR_RESET}"
         for group in range((len(boxes) + 3) // 4)
     )
