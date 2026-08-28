@@ -103,7 +103,7 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_display(sequence),
-            "Length: 4\n█▉░▉\n\033[38;2;255;0;0m▔▔▔▔\033[0m",
+            "Length: 4\n█▉░▉\n\033[38;2;80;160;255m▔▔▔▔\033[0m",
         )
 
     def test_sequence_as_display_colors_four_step_groups(self):
@@ -116,8 +116,8 @@ class OutputTests(unittest.TestCase):
         self.assertEqual(
             sequence_as_display(sequence),
             "Length: 5\n▉▉▉▉▉\n"
-            "\033[38;2;255;0;0m▔▔▔▔\033[0m"
-            "\033[93m▔\033[0m",
+            "\033[38;2;80;160;255m▔▔▔▔\033[0m"
+            "\033[38;2;180;120;255m▔\033[0m",
         )
 
 

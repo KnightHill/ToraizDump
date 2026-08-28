@@ -67,9 +67,19 @@ toraiz-dump --auto -f json -o sequence.json
 ```
 
 Every dump also prints the sequence length and a compact visual display of the
-steps to the terminal. Filled circles (`●`) are regular active steps, empty
-circles (`○`) are regular rests, filled squares (`■`) are tied active steps,
-and empty squares (`□`) are tied rests.
+active steps to the terminal. A note is shown as a seven-eighth block (`▉`),
+leaving a narrow gap before the next step, while a rest is shown as a light
+shade block (`░`). When a step is tied to the preceding note, that preceding
+block becomes full (`█`) to close the gap and show the sustained connection.
+
+The line beneath the steps divides the sequence into four-step groups using
+alternating blue and purple upper bars. For example:
+
+```text
+Length: 8
+█▉░▉▉░█▉
+▔▔▔▔▔▔▔▔
+```
 
 The JSON file contains the active step records:
 
@@ -77,8 +87,8 @@ The JSON file contains the active step records:
 {
   "length": 16,
   "steps": [
-    {"note": 60, "velocity": 100, "rest": false},
-    {"note": 62, "velocity": 0, "rest": true}
+    {"note": 60, "velocity": 100, "rest": false, "tie": false},
+    {"note": 62, "velocity": 0, "rest": true, "tie": false}
   ]
 }
 ```
@@ -155,6 +165,12 @@ To run one test module, pass its dotted module name:
 
 ```bash
 .venv/bin/python -m unittest tests.test_protocol -v
+```
+
+To preview the sequence display with different note, rest, and tie patterns:
+
+```bash
+.venv/bin/python test-display.py
 ```
 
 The protocol parser can also be used independently of MIDI hardware through
