@@ -40,8 +40,9 @@ def show_pattern(name: str, steps: tuple[SequencerStep, ...]) -> None:
         length=len(steps),
         steps=steps,
         raw_length=len(steps) - 1,
+        program_name=name,
     )
-    print(f"\n{name}")
+    print()
     print(sequence_as_display(sequence))
 
 

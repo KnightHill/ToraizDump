@@ -23,6 +23,7 @@ def make_sequence():
             SequencerStep(note=72, velocity=127),
         ),
         raw_length=3,
+        program_name="Test Program",
     )
 
 
@@ -31,6 +32,7 @@ class OutputTests(unittest.TestCase):
         value = sequence_as_dict(make_sequence())
 
         self.assertEqual(value["length"], 4)
+        self.assertEqual(value["program_name"], "Test Program")
         self.assertEqual(len(value["steps"]), 4)
         self.assertEqual(
             value["steps"][1],
@@ -103,6 +105,7 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_display(sequence),
+            "Program: (unnamed)\n"
             "Length: 4\n█▉░▉\n\033[38;2;80;160;255m▔▔▔▔\033[0m",
         )
 
@@ -115,7 +118,7 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_display(sequence),
-            "Length: 5\n▉▉▉▉▉\n"
+            "Program: (unnamed)\nLength: 5\n▉▉▉▉▉\n"
             "\033[38;2;80;160;255m▔▔▔▔\033[0m"
             "\033[38;2;180;120;255m▔\033[0m",
         )

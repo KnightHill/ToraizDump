@@ -66,16 +66,18 @@ toraiz-dump --auto --format json --output sequence.json
 toraiz-dump --auto -f json -o sequence.json
 ```
 
-Every dump also prints the sequence length and a compact visual display of the
-active steps to the terminal. A note is shown as a seven-eighth block (`▉`),
-leaving a narrow gap before the next step, while a rest is shown as a light
-shade block (`░`). When a step is tied to the preceding note, that preceding
-block becomes full (`█`) to close the gap and show the sustained connection.
+Every dump also prints the program name, sequence length, and a compact visual
+display of the active steps to the terminal. A note is shown as a seven-eighth
+block (`▉`), leaving a narrow gap before the next step, while a rest is shown
+as a light shade block (`░`). When a step is tied to the preceding note, that
+preceding block becomes full (`█`) to close the gap and show the sustained
+connection.
 
 The line beneath the steps divides the sequence into four-step groups using
 alternating blue and purple upper bars. For example:
 
 ```text
+Program: Basic Program
 Length: 8
 █▉░▉▉░█▉
 ▔▔▔▔▔▔▔▔
@@ -85,6 +87,7 @@ The JSON file contains the active step records:
 
 ```json
 {
+  "program_name": "Basic Program",
   "length": 16,
   "steps": [
     {"note": 60, "velocity": 100, "rest": false, "tie": false},
@@ -93,6 +96,7 @@ The JSON file contains the active step records:
 }
 ```
 
+`program_name` is the name stored in the current AS-1 edit buffer.
 `length` is the displayed sequence length from 1 through 64.
 Only the first `length` step records are returned.
 A velocity of `0` represents a rest.
@@ -144,12 +148,13 @@ F0 00 40 05 00 00 01 08 10 06 F7
 The AS-1 responds with an edit-buffer dump containing 1,024 program bytes,
 documented as 1,171 MIDI-safe packed bytes. The parser validates the response
 header and reconstructs the bytes needed for the sequencer. It reads the raw
-program layout (length at byte 95, notes at bytes 128–191, and velocities at
-bytes 192–255) rather than treating MIDI NRPN numbers as program offsets. It
-decodes bit 7 of each note byte as the tie flag and bits 0–6 as the MIDI note
-number. It decodes velocity bit 7 as the active-step flag and bits 0–6 as
-standard MIDI velocity. It tolerates dump length variations as long as the
-complete sequencer region is present.
+program layout (length at byte 95, the 20-character program name at bytes
+107–126, notes at bytes 128–191, and velocities at bytes 192–255) rather than
+treating MIDI NRPN numbers as program offsets. It decodes bit 7 of each note
+byte as the tie flag and bits 0–6 as the MIDI note number. It decodes velocity
+bit 7 as the active-step flag and bits 0–6 as standard MIDI velocity. It
+tolerates dump length variations as long as the complete sequencer region is
+present.
 
 ## Development
 

@@ -20,6 +20,7 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
     """Return the JSON-compatible representation of a sequence."""
 
     return {
+        "program_name": sequence.program_name,
         "length": sequence.length,
         "steps": [
             {
@@ -56,7 +57,11 @@ def sequence_as_display(sequence: SequencerData) -> str:
         f"{'▔' * min(4, len(boxes) - group * 4)}{COLOR_RESET}"
         for group in range((len(boxes) + 3) // 4)
     )
-    return f"Length: {sequence.length}\n{display}\n{group_line}"
+    program_name = sequence.program_name or "(unnamed)"
+    return (
+        f"Program: {program_name}\n"
+        f"Length: {sequence.length}\n{display}\n{group_line}"
+    )
 
 
 def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
@@ -101,5 +106,7 @@ def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
         message.time = position - previous_position
         track.append(message)
         previous_position = position
-    track.append(mido.MetaMessage("end_of_track", time=end_position - previous_position))
+    track.append(mido.MetaMessage(
+        "end_of_track", time=end_position - previous_position,
+    ))
     midi_file.save(file=file)

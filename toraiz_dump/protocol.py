@@ -13,6 +13,8 @@ PROGRAM_BYTES = 1024
 PACKED_BYTES = PROGRAM_BYTES + (PROGRAM_BYTES + 6) // 7
 
 SEQUENCE_LENGTH_INDEX = 95
+PROGRAM_NAME_START_INDEX = 107
+PROGRAM_NAME_LENGTH = 20
 NOTE_START_INDEX = 128
 VELOCITY_START_INDEX = 192
 STEP_COUNT = 64
@@ -40,6 +42,19 @@ class SequencerData:
     length: int
     steps: tuple[SequencerStep, ...]
     raw_length: int
+    program_name: str = ""
+
+
+def _decode_program_name(program: Sequence[int]) -> str:
+    """Decode and trim the AS-1's fixed-width ASCII program name."""
+
+    name_end = PROGRAM_NAME_START_INDEX + PROGRAM_NAME_LENGTH
+    raw_name = bytes(program[PROGRAM_NAME_START_INDEX:name_end]).rstrip(b" \x00")
+    decoded = raw_name.decode("ascii", errors="replace")
+    return "".join(
+        character if character.isprintable() else "�"
+        for character in decoded
+    )
 
 
 def decode_edit_buffer(packed: Sequence[int]) -> bytes:
@@ -99,7 +114,7 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
         )
 
     # The documented dump contains 1,171 packed bytes, but sequencer parsing
-    # only depends on the first 384 decoded bytes. Accept longer or shorter
+    # only depends on the first 256 decoded bytes. Accept longer or shorter
     # firmware variants as long as all sequencer fields are present.
     program = _decode_packed_bytes(packed)
     raw_length = program[SEQUENCE_LENGTH_INDEX]
@@ -121,6 +136,7 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
         length=raw_length + 1,
         steps=steps,
         raw_length=raw_length,
+        program_name=_decode_program_name(program),
     )
 
 
