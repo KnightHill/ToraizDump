@@ -20,6 +20,34 @@ VELOCITY_START_INDEX = 192
 STEP_COUNT = 64
 SEQUENCER_BYTES = VELOCITY_START_INDEX + STEP_COUNT
 MIN_PACKED_BYTES = SEQUENCER_BYTES + (SEQUENCER_BYTES + 6) // 7
+BPM_INDEX = 87
+TIME_DIVISION_INDEX = 92
+
+
+@dataclass(frozen=True)
+class TimeDivision:
+    """Timing applied to each AS-1 sequencer step."""
+
+    value: str
+    description: str
+    step_ticks: tuple[int, ...]
+
+
+# Step lengths use a 480-tick quarter note. Swing divisions alternate a
+# two-thirds/one-third pair, matching the AS-1's documented full swing timing.
+TIME_DIVISIONS = (
+    TimeDivision("2", "half note", (960,)),
+    TimeDivision("4", "quarter note", (480,)),
+    TimeDivision("8D", "dotted eighth note", (360,)),
+    TimeDivision("8", "eighth note", (240,)),
+    TimeDivision("8S", "eighth note swing", (320, 160)),
+    TimeDivision("8T", "eighth-note triplet", (160,)),
+    TimeDivision("16", "sixteenth note", (120,)),
+    TimeDivision("16S", "sixteenth note swing", (160, 80)),
+    TimeDivision("16T", "sixteenth-note triplet", (80,)),
+    TimeDivision("32", "thirty-second note", (60,)),
+)
+DEFAULT_TIME_DIVISION = TIME_DIVISIONS[6]
 
 
 @dataclass(frozen=True)
@@ -43,6 +71,8 @@ class SequencerData:
     steps: tuple[SequencerStep, ...]
     raw_length: int
     program_name: str = ""
+    bpm: int = 120
+    time_division: TimeDivision = DEFAULT_TIME_DIVISION
 
 
 def _decode_program_name(program: Sequence[int]) -> str:
@@ -117,6 +147,16 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
     # only depends on the first 256 decoded bytes. Accept longer or shorter
     # firmware variants as long as all sequencer fields are present.
     program = _decode_packed_bytes(packed)
+    bpm = program[BPM_INDEX]
+    if not 30 <= bpm <= 250:
+        raise ValueError(f"invalid AS-1 BPM value: {bpm}")
+
+    raw_time_division = program[TIME_DIVISION_INDEX]
+    if not 0 <= raw_time_division < len(TIME_DIVISIONS):
+        raise ValueError(
+            f"invalid AS-1 time division value: {raw_time_division}"
+        )
+
     raw_length = program[SEQUENCE_LENGTH_INDEX]
     if not 0 <= raw_length < STEP_COUNT:
         raise ValueError(f"invalid AS-1 sequence length value: {raw_length}")
@@ -137,6 +177,8 @@ def parse_edit_buffer_response(data: Iterable[int]) -> SequencerData:
         steps=steps,
         raw_length=raw_length,
         program_name=_decode_program_name(program),
+        bpm=bpm,
+        time_division=TIME_DIVISIONS[raw_time_division],
     )
 
 

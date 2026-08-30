@@ -9,8 +9,8 @@ import mido
 from .protocol import SequencerData
 
 TICKS_PER_BEAT = 480
+# Kept as the default sixteenth-note duration for callers that import it.
 STEP_TICKS = TICKS_PER_BEAT // 4
-DEFAULT_TEMPO = 500_000  # 120 BPM
 GROUP_BLUE = "\033[38;2;80;160;255m"
 GROUP_PURPLE = "\033[38;2;180;120;255m"
 COLOR_RESET = "\033[0m"
@@ -21,6 +21,8 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
 
     return {
         "program_name": sequence.program_name,
+        "bpm": sequence.bpm,
+        "time_division": sequence.time_division.value,
         "length": sequence.length,
         "steps": [
             {
@@ -60,6 +62,9 @@ def sequence_as_display(sequence: SequencerData) -> str:
     program_name = sequence.program_name or "(unnamed)"
     return (
         f"Program: {program_name}\n"
+        f"BPM: {sequence.bpm}\n"
+        f"Time division: {sequence.time_division.value} "
+        f"({sequence.time_division.description})\n"
         f"Length: {sequence.length}\n{display}\n{group_line}"
     )
 
@@ -71,31 +76,39 @@ def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
     track = mido.MidiTrack()
     midi_file.tracks.append(track)
     track.append(mido.MetaMessage("track_name", name="TORAIZ AS-1 Sequence"))
-    track.append(mido.MetaMessage("set_tempo", tempo=DEFAULT_TEMPO))
+    track.append(mido.MetaMessage(
+        "set_tempo", tempo=mido.bpm2tempo(sequence.bpm),
+    ))
+    track.append(mido.MetaMessage(
+        "text", text=f"TORAIZ AS-1 TimeDiv: {sequence.time_division.value}",
+    ))
 
     events: list[tuple[int, mido.Message]] = []
     active_note: int | None = None
+    position = 0
     for index, step in enumerate(sequence.steps[: sequence.length]):
-        position = index * STEP_TICKS
         if step.tie and active_note is not None:
-            continue
-        if step.is_rest:
+            pass
+        elif step.is_rest:
             if active_note is not None:
                 events.append((position, mido.Message(
                     "note_off", note=active_note, velocity=0,
                 )))
                 active_note = None
-            continue
-        if active_note is not None:
+        else:
+            if active_note is not None:
+                events.append((position, mido.Message(
+                    "note_off", note=active_note, velocity=0,
+                )))
             events.append((position, mido.Message(
-                "note_off", note=active_note, velocity=0,
+                "note_on", note=step.note, velocity=step.velocity,
             )))
-        events.append((position, mido.Message(
-            "note_on", note=step.note, velocity=step.velocity,
-        )))
-        active_note = step.note
+            active_note = step.note
+        position += sequence.time_division.step_ticks[
+            index % len(sequence.time_division.step_ticks)
+        ]
 
-    end_position = sequence.length * STEP_TICKS
+    end_position = position
     if active_note is not None:
         events.append((end_position, mido.Message(
             "note_off", note=active_note, velocity=0,

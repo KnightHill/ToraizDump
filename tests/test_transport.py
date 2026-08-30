@@ -24,6 +24,8 @@ class FakeInput:
 
 def edit_buffer_message(raw_length=4):
     program = bytearray(1024)
+    program[87] = 120
+    program[92] = 6
     program[95] = raw_length
     return mido.Message(
         "sysex",

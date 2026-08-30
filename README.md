@@ -66,18 +66,20 @@ toraiz-dump --auto --format json --output sequence.json
 toraiz-dump --auto -f json -o sequence.json
 ```
 
-Every dump also prints the program name, sequence length, and a compact visual
-display of the active steps to the terminal. A note is shown as a seven-eighth
-block (`▉`), leaving a narrow gap before the next step, while a rest is shown
-as a light shade block (`░`). When a step is tied to the preceding note, that
-preceding block becomes full (`█`) to close the gap and show the sustained
-connection.
+Every dump also prints the program name, BPM, time division, sequence length,
+and a compact visual display of the active steps to the terminal. A note is
+shown as a seven-eighth block (`▉`), leaving a narrow gap before the next step,
+while a rest is shown as a light shade block (`░`). When a step is tied to the
+preceding note, that preceding block becomes full (`█`) to close the gap and
+show the sustained connection.
 
 The line beneath the steps divides the sequence into four-step groups using
 alternating blue and purple upper bars. For example:
 
 ```text
 Program: Basic Program
+BPM: 120
+Time division: 16 (sixteenth note)
 Length: 8
 █▉░▉▉░█▉
 ▔▔▔▔▔▔▔▔
@@ -88,6 +90,8 @@ The JSON file contains the active step records:
 ```json
 {
   "program_name": "Basic Program",
+  "bpm": 120,
+  "time_division": "16",
   "length": 16,
   "steps": [
     {"note": 60, "velocity": 100, "rest": false, "tie": false},
@@ -97,6 +101,10 @@ The JSON file contains the active step records:
 ```
 
 `program_name` is the name stored in the current AS-1 edit buffer.
+`bpm` is the program tempo from 30 through 250 beats per minute.
+`time_division` is the AS-1 step division: `2`, `4`, `8D`, `8`, `8S`, `8T`,
+`16`, `16S`, `16T`, or `32`. The suffixes mean dotted (`D`), swing (`S`),
+and triplet (`T`).
 `length` is the displayed sequence length from 1 through 64.
 Only the first `length` step records are returned.
 A velocity of `0` represents a rest.
@@ -116,9 +124,11 @@ toraiz-dump --auto --format midi --output sequence.mid
 toraiz-dump --auto -f midi -o sequence.mid
 ```
 
-The MIDI file uses one 16th-note slot per sequencer step at 120 BPM. Its tempo
-can be changed normally in a DAW or MIDI editor. MIDI output contains only the
-active number of steps and is saved to the file specified by `--output`.
+The MIDI file uses the BPM and time division stored in the AS-1 program. Dotted,
+triplet, and full-swing divisions are reflected in the MIDI event timing. The
+source TimeDiv value is also stored as a text meta-event. MIDI output contains
+only the active number of steps and is saved to the file specified by
+`--output`.
 
 Play a saved MIDI file with `amidiplay`:
 
@@ -148,13 +158,13 @@ F0 00 40 05 00 00 01 08 10 06 F7
 The AS-1 responds with an edit-buffer dump containing 1,024 program bytes,
 documented as 1,171 MIDI-safe packed bytes. The parser validates the response
 header and reconstructs the bytes needed for the sequencer. It reads the raw
-program layout (length at byte 95, the 20-character program name at bytes
-107–126, notes at bytes 128–191, and velocities at bytes 192–255) rather than
-treating MIDI NRPN numbers as program offsets. It decodes bit 7 of each note
-byte as the tie flag and bits 0–6 as the MIDI note number. It decodes velocity
-bit 7 as the active-step flag and bits 0–6 as standard MIDI velocity. It
-tolerates dump length variations as long as the complete sequencer region is
-present.
+program layout (BPM at byte 87, TimeDiv at byte 92, length at byte 95, the
+20-character program name at bytes 107–126, notes at bytes 128–191, and
+velocities at bytes 192–255) rather than treating MIDI NRPN numbers as program
+offsets. It decodes bit 7 of each note byte as the tie flag and bits 0–6 as the
+MIDI note number. It decodes velocity bit 7 as the active-step flag and bits
+0–6 as standard MIDI velocity. It tolerates dump length variations as long as
+the complete sequencer region is present.
 
 ## Development
 
