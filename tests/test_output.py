@@ -9,7 +9,7 @@ from toraiz_dump.output import (
     sequence_as_display,
     write_midi,
 )
-from toraiz_dump.protocol import SequencerData, SequencerStep
+from toraiz_dump.protocol import TIME_DIVISIONS, SequencerData, SequencerStep
 
 
 def make_sequence():
@@ -23,6 +23,9 @@ def make_sequence():
             SequencerStep(note=72, velocity=127),
         ),
         raw_length=3,
+        program_name="Test Program",
+        bpm=123,
+        time_division=TIME_DIVISIONS[6],
     )
 
 
@@ -31,6 +34,9 @@ class OutputTests(unittest.TestCase):
         value = sequence_as_dict(make_sequence())
 
         self.assertEqual(value["length"], 4)
+        self.assertEqual(value["program_name"], "Test Program")
+        self.assertEqual(value["bpm"], 123)
+        self.assertEqual(value["time_division"], "16")
         self.assertEqual(len(value["steps"]), 4)
         self.assertEqual(
             value["steps"][1],
@@ -43,9 +49,22 @@ class OutputTests(unittest.TestCase):
         output.seek(0)
 
         midi_file = mido.MidiFile(file=output)
+        meta_messages = [
+            message for message in midi_file.tracks[0] if message.is_meta
+        ]
         messages = [
             message for message in midi_file.tracks[0] if not message.is_meta
         ]
+
+        self.assertEqual(
+            next(message for message in meta_messages
+                 if message.type == "set_tempo").tempo,
+            mido.bpm2tempo(123),
+        )
+        self.assertIn(
+            mido.MetaMessage("text", text="TORAIZ AS-1 TimeDiv: 16", time=0),
+            meta_messages,
+        )
 
         self.assertEqual(
             [
@@ -89,6 +108,35 @@ class OutputTests(unittest.TestCase):
             ],
         )
 
+    def test_write_midi_uses_full_swing_step_timing(self):
+        sequence = SequencerData(
+            length=3,
+            steps=tuple(
+                SequencerStep(note=60 + index, velocity=100)
+                for index in range(3)
+            ),
+            raw_length=2,
+            time_division=TIME_DIVISIONS[7],
+        )
+        output = BytesIO()
+
+        write_midi(sequence, output)
+        output.seek(0)
+        messages = [message for message in mido.MidiFile(file=output).tracks[0]
+                    if not message.is_meta]
+
+        self.assertEqual(
+            [(message.type, message.time) for message in messages],
+            [
+                ("note_on", 0),
+                ("note_off", 160),
+                ("note_on", 0),
+                ("note_off", 80),
+                ("note_on", 0),
+                ("note_off", 160),
+            ],
+        )
+
     def test_sequence_as_display_glues_tied_steps(self):
         sequence = SequencerData(
             length=4,
@@ -103,6 +151,9 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_display(sequence),
+            "Program: (unnamed)\n"
+            "BPM: 120\n"
+            "Time division: 16 (sixteenth note)\n"
             "Length: 4\n█▉░▉\n\033[38;2;80;160;255m▔▔▔▔\033[0m",
         )
 
@@ -115,6 +166,8 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_display(sequence),
+            "Program: (unnamed)\nBPM: 120\n"
+            "Time division: 16 (sixteenth note)\n"
             "Length: 5\n▉▉▉▉▉\n"
             "\033[38;2;80;160;255m▔▔▔▔\033[0m"
             "\033[38;2;180;120;255m▔\033[0m",

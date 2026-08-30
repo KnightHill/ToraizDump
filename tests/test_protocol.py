@@ -4,6 +4,7 @@ from toraiz_dump.protocol import (
     EDIT_BUFFER_RESPONSE,
     MIN_PACKED_BYTES,
     PACKED_BYTES,
+    TIME_DIVISIONS,
     decode_edit_buffer,
     pack_edit_buffer,
     parse_edit_buffer_response,
@@ -12,7 +13,10 @@ from toraiz_dump.protocol import (
 
 def make_program():
     program = bytearray(1024)
+    program[87] = 123
+    program[92] = 8
     program[95] = 15
+    program[107:127] = b"Test Program".ljust(20)
     for index in range(64):
         program[128 + index] = 36 + index
         program[192 + index] = 0 if index == 2 else 0x80 | (127 - index)
@@ -33,10 +37,31 @@ class ProtocolTests(unittest.TestCase):
 
         self.assertEqual(sequence.length, 16)
         self.assertEqual(sequence.raw_length, 15)
+        self.assertEqual(sequence.program_name, "Test Program")
+        self.assertEqual(sequence.bpm, 123)
+        self.assertEqual(sequence.time_division, TIME_DIVISIONS[8])
         self.assertEqual(sequence.steps[0].note, 36)
         self.assertEqual(sequence.steps[0].velocity, 127)
         self.assertTrue(sequence.steps[2].is_rest)
         self.assertEqual(len(sequence.steps), 64)
+
+    def test_program_name_replaces_malformed_characters(self):
+        program = make_program()
+        program[107:127] = b"Bad\xffName".ljust(20)
+        payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+        sequence = parse_edit_buffer_response(payload)
+
+        self.assertEqual(sequence.program_name, "Bad�Name")
+
+    def test_program_name_trims_null_padding(self):
+        program = make_program()
+        program[107:127] = b"Short Name".ljust(20, b"\x00")
+        payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+        sequence = parse_edit_buffer_response(payload)
+
+        self.assertEqual(sequence.program_name, "Short Name")
 
     def test_velocity_high_bit_marks_an_active_step(self):
         program = make_program()
@@ -60,6 +85,22 @@ class ProtocolTests(unittest.TestCase):
 
         self.assertEqual(step.note, 60)
         self.assertTrue(step.tie)
+
+    def test_rejects_invalid_bpm(self):
+        program = make_program()
+        program[87] = 29
+        payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+        with self.assertRaisesRegex(ValueError, "BPM value: 29"):
+            parse_edit_buffer_response(payload)
+
+    def test_rejects_invalid_time_division(self):
+        program = make_program()
+        program[92] = 10
+        payload = bytes(EDIT_BUFFER_RESPONSE) + pack_edit_buffer(program)
+
+        with self.assertRaisesRegex(ValueError, "time division value: 10"):
+            parse_edit_buffer_response(payload)
 
     def test_parse_accepts_mido_payload_without_f0_f7(self):
         program = make_program()
