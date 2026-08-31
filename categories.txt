@@ -1,0 +1,14 @@
+AR - Arpeggio
+BA - Bass
+BD - Bass drum / kick
+BR - Brass
+DR - Drums / percussion
+FX - Effects
+GT - Guitar
+HH - Hi-hat
+LD - Lead
+PD - Pad
+SN - Snare
+ST - Strings
+TM - Tom drum
+VX - Voice / vocal
