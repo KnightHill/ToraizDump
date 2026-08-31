@@ -16,6 +16,14 @@ This installs the `toraiz-dump` and `toraiz-programs` commands into the active
 Python environment. Run the installation command again after updating an
 existing checkout so the new launcher is created.
 
+The repository also contains shortcuts that can be run directly from its root
+without activating the virtual environment:
+
+```bash
+./toraiz-dump --version
+./toraiz-programs --version
+```
+
 The AS-1 must be connected over USB MIDI or through a MIDI interface. Make
 sure its MIDI SysEx input/output settings allow SysEx communication.
 
