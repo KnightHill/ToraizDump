@@ -4,10 +4,15 @@ from toraiz_dump.protocol import (
     EDIT_BUFFER_RESPONSE,
     MIN_PACKED_BYTES,
     PACKED_BYTES,
+    PROGRAM_DUMP_REQUEST,
+    PROGRAM_DUMP_RESPONSE,
     TIME_DIVISIONS,
+    bank_name,
     decode_edit_buffer,
+    make_program_dump_request,
     pack_edit_buffer,
     parse_edit_buffer_response,
+    parse_program_dump_response,
 )
 
 
@@ -24,6 +29,84 @@ def make_program():
 
 
 class ProtocolTests(unittest.TestCase):
+    def test_bank_names_map_user_then_factory_banks(self):
+        self.assertEqual(
+            [bank_name(index) for index in range(10)],
+            ["U1", "U2", "U3", "U4", "U5",
+             "F1", "F2", "F3", "F4", "F5"],
+        )
+
+    def test_make_program_dump_request(self):
+        self.assertEqual(
+            make_program_dump_request(5, 98),
+            PROGRAM_DUMP_REQUEST + (5, 98),
+        )
+
+    def test_program_dump_request_rejects_invalid_indices(self):
+        for bank_index, program_index in ((-1, 0), (10, 0), (0, -1), (0, 99)):
+            with self.subTest(bank=bank_index, program=program_index):
+                with self.assertRaises(ValueError):
+                    make_program_dump_request(bank_index, program_index)
+
+    def test_parse_program_dump_response(self):
+        program = make_program()
+        program[107:127] = b"Stored Bass".ljust(20)
+        payload = (
+            bytes(PROGRAM_DUMP_RESPONSE)
+            + bytes((7, 41))
+            + pack_edit_buffer(program)
+        )
+
+        summary = parse_program_dump_response(
+            payload, expected_bank=7, expected_program=41
+        )
+
+        self.assertEqual(summary.bank, "F3")
+        self.assertEqual(summary.program, 42)
+        self.assertEqual(summary.name, "Stored Bass")
+
+    def test_parse_program_dump_accepts_complete_sysex(self):
+        program = make_program()
+        payload = (
+            b"\xf0"
+            + bytes(PROGRAM_DUMP_RESPONSE)
+            + b"\x00\x00"
+            + pack_edit_buffer(program)
+            + b"\xf7"
+        )
+
+        self.assertEqual(parse_program_dump_response(payload).bank, "U1")
+
+    def test_parse_program_dump_replaces_malformed_name_characters(self):
+        program = make_program()
+        program[107:127] = b"Bad\xffName".ljust(20)
+        payload = (
+            bytes(PROGRAM_DUMP_RESPONSE)
+            + b"\x00\x00"
+            + pack_edit_buffer(program)
+        )
+
+        self.assertEqual(parse_program_dump_response(payload).name, "Bad�Name")
+
+    def test_parse_program_dump_rejects_wrong_address(self):
+        program = make_program()
+        payload = (
+            bytes(PROGRAM_DUMP_RESPONSE)
+            + b"\x01\x02"
+            + pack_edit_buffer(program)
+        )
+
+        with self.assertRaisesRegex(ValueError, "expected U1"):
+            parse_program_dump_response(payload, expected_bank=0)
+        with self.assertRaisesRegex(ValueError, "expected P02"):
+            parse_program_dump_response(payload, expected_program=1)
+
+    def test_parse_program_dump_rejects_short_response(self):
+        payload = bytes(PROGRAM_DUMP_RESPONSE) + b"\x00\x00\x00"
+
+        with self.assertRaisesRegex(ValueError, "too short for its name"):
+            parse_program_dump_response(payload)
+
     def test_packed_round_trip_preserves_all_bytes(self):
         program = bytes((index * 53) % 256 for index in range(1024))
         packed = pack_edit_buffer(program)

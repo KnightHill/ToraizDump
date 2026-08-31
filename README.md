@@ -12,6 +12,10 @@ returns all 64 sequencer steps; individual step queries are not required.
 python -m pip install -e .
 ```
 
+This installs the `toraiz-dump` and `toraiz-programs` commands into the active
+Python environment. Run the installation command again after updating an
+existing checkout so the new launcher is created.
+
 The AS-1 must be connected over USB MIDI or through a MIDI interface. Make
 sure its MIDI SysEx input/output settings allow SysEx communication.
 
@@ -20,6 +24,7 @@ sure its MIDI SysEx input/output settings allow SysEx communication.
 ```bash
 toraiz-dump --list-ports
 toraiz-dump --version
+toraiz-programs --version
 ```
 
 Dump commands require `-o`/`--output` to specify the file where the result is
@@ -56,6 +61,48 @@ toraiz-dump \
 ```
 
 `--midi-input` defaults to the `--midi-output` value when it is omitted.
+
+## List stored programs
+
+`toraiz-programs` is a separate command that lists the bank, program number,
+and name of every stored program without selecting or modifying programs on
+the synth:
+
+```bash
+toraiz-programs --auto
+```
+
+It scans all 990 slots in order: user banks `U1` through `U5`, then factory
+banks `F1` through `F5`, with programs `P01` through `P99` in each bank. Each
+result is printed as soon as it is received:
+
+```text
+U1 P01 Basic Program
+U1 P02 Deep Bass
+F5 P99 Final Program
+```
+
+Redirect standard output to save the list:
+
+```bash
+toraiz-programs --auto > programs.txt
+```
+
+The scan sends one read-only stored-program request at a time. A complete scan
+may take several minutes over a 5-pin DIN MIDI connection. If a program does
+not respond before `--timeout` (2 seconds by default), the command identifies
+that slot and stops with a nonzero exit status. It does not silently produce an
+incomplete list.
+
+The command also accepts the same `--midi-input`, `--midi-output`, `--auto`,
+`--list-ports`, and `--version` connection options as `toraiz-dump`:
+
+```bash
+toraiz-programs \
+  --midi-input "Toraiz AS-1:Toraiz AS-1 MIDI 1 28:0" \
+  --midi-output "Toraiz AS-1:Toraiz AS-1 MIDI 1 28:0" \
+  --timeout 5
+```
 
 ## Output formats
 
@@ -154,6 +201,17 @@ The dumper sends this SysEx request, shown including `F0` and `F7`:
 ```text
 F0 00 40 05 00 00 01 08 10 06 F7
 ```
+
+The program-list command requests each stored program with its zero-based bank
+and program indices (`bb` and `pp`):
+
+```text
+F0 00 40 05 00 00 01 08 10 05 bb pp F7
+```
+
+Stored-program responses use command byte `02` and echo the requested bank and
+program before the packed program data. The scanner checks that address before
+reading the name.
 
 The AS-1 responds with an edit-buffer dump containing 1,024 program bytes,
 documented as 1,171 MIDI-safe packed bytes. The parser validates the response

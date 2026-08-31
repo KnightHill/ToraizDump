@@ -1,9 +1,21 @@
 import unittest
+from unittest.mock import patch
 
 import mido
 
-from toraiz_dump.protocol import EDIT_BUFFER_REQUEST, EDIT_BUFFER_RESPONSE, pack_edit_buffer
-from toraiz_dump.transport import read_current_sequencer
+from toraiz_dump.protocol import (
+    EDIT_BUFFER_REQUEST,
+    EDIT_BUFFER_RESPONSE,
+    PROGRAM_DUMP_RESPONSE,
+    ProgramSummary,
+    make_program_dump_request,
+    pack_edit_buffer,
+)
+from toraiz_dump.transport import (
+    iter_program_summaries,
+    read_current_sequencer,
+    read_program_summary,
+)
 
 
 class FakeOutput:
@@ -33,7 +45,61 @@ def edit_buffer_message(raw_length=4):
     )
 
 
+def program_dump_message(bank_index=0, program_index=0, name="Basic Program"):
+    program = bytearray(1024)
+    program[107:127] = name.encode("ascii").ljust(20)
+    return mido.Message(
+        "sysex",
+        data=(
+            bytes(PROGRAM_DUMP_RESPONSE)
+            + bytes((bank_index, program_index))
+            + pack_edit_buffer(program)
+        ),
+    )
+
+
 class TransportTests(unittest.TestCase):
+    def test_reads_one_stored_program(self):
+        output = FakeOutput()
+        input_port = FakeInput([
+            program_dump_message(1, 2, "Wrong Address"),
+            program_dump_message(5, 8, "Factory Bass"),
+        ])
+
+        summary = read_program_summary(
+            output, input_port, 5, 8, timeout=0.1
+        )
+
+        self.assertEqual(summary, ProgramSummary("F1", 9, "Factory Bass"))
+        self.assertEqual(
+            output.messages,
+            [mido.Message("sysex", data=make_program_dump_request(5, 8))],
+        )
+
+    def test_program_timeout_identifies_the_slot(self):
+        with self.assertRaisesRegex(TimeoutError, "U2 P03"):
+            read_program_summary(
+                FakeOutput(), FakeInput(), 1, 2, timeout=0
+            )
+
+    def test_iterates_all_programs_in_address_order(self):
+        def fake_read(_output, _input, bank, program, _timeout):
+            return ProgramSummary(
+                "U1" if bank == 0 else "F5",
+                program + 1,
+                f"Name {bank}-{program}",
+            )
+
+        with patch(
+            "toraiz_dump.transport.read_program_summary",
+            side_effect=fake_read,
+        ) as read:
+            summaries = list(iter_program_summaries(object(), object(), 0.5))
+
+        self.assertEqual(len(summaries), 990)
+        self.assertEqual(read.call_args_list[0].args[2:], (0, 0, 0.5))
+        self.assertEqual(read.call_args_list[-1].args[2:], (9, 98, 0.5))
+
     def test_reads_response_after_ignoring_unrelated_messages(self):
         output = FakeOutput()
         input_port = FakeInput(
