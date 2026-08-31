@@ -48,6 +48,35 @@ class ProgramsCliTests(unittest.TestCase):
             "U1 P01 Basic Program\nF5 P99 (unnamed)\n",
         )
 
+    @patch("toraiz_dump.programs_cli.iter_program_summaries")
+    @patch("toraiz_dump.programs_cli.RtMidiPollingInput")
+    @patch("mido.open_output")
+    def test_filter_prints_only_matching_category(
+        self, open_output, polling_input, iter_summaries
+    ):
+        open_output.return_value = ContextValue()
+        polling_input.return_value = ContextValue()
+        iter_summaries.return_value = iter((
+            ProgramSummary("U1", 1, "BA Pro-One"),
+            ProgramSummary("U1", 2, "LD Feels So Good"),
+            ProgramSummary("U1", 3, "BA Other Bass"),
+        ))
+        output = io.StringIO()
+
+        with patch.object(
+            sys,
+            "argv",
+            ["toraiz-programs", "--midi-output", "TORAIZ AS-1", "-f", "BA"],
+        ):
+            with redirect_stdout(output):
+                result = main()
+
+        self.assertEqual(result, 0)
+        self.assertEqual(
+            output.getvalue(),
+            "U1 P01 BA Pro-One\nU1 P03 BA Other Bass\n",
+        )
+
     def test_version_option(self):
         output = io.StringIO()
         with patch.object(sys, "argv", ["toraiz-programs", "--version"]):
@@ -56,7 +85,7 @@ class ProgramsCliTests(unittest.TestCase):
                     main()
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertEqual(output.getvalue(), "toraiz-programs 0.4.0\n")
+        self.assertEqual(output.getvalue(), "toraiz-programs 0.4.1\n")
 
     @patch("toraiz_dump.programs_cli.iter_program_summaries")
     @patch("toraiz_dump.programs_cli.RtMidiPollingInput")

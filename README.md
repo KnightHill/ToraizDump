@@ -80,6 +80,33 @@ the synth:
 toraiz-programs --auto
 ```
 
+Filter the listing by category with `-f`/`--filter`:
+
+```bash
+toraiz-programs --auto --filter BA
+```
+
+The filter accepts the category codes documented in `categories.txt`.
+
+Available categories:
+
+| Code | Description |
+| --- | --- |
+| `AR` | Arpeggio |
+| `BA` | Bass |
+| `BD` | Bass drum / kick |
+| `BR` | Brass |
+| `DR` | Drums / percussion |
+| `FX` | Effects |
+| `GT` | Guitar |
+| `HH` | Hi-hat |
+| `LD` | Lead |
+| `PD` | Pad |
+| `SN` | Snare |
+| `ST` | Strings |
+| `TM` | Tom drum |
+| `VX` | Voice / vocal |
+
 It scans all 990 slots in order: user banks `U1` through `U5`, then factory
 banks `F1` through `F5`, with programs `P01` through `P99` in each bank. Each
 result is printed as soon as it is received:

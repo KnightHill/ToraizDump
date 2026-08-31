@@ -9,6 +9,11 @@ from .cli import autodetect_ports
 from .ports import RtMidiPollingInput
 from .transport import iter_program_summaries
 
+CATEGORY_CODES = (
+    "AR", "BA", "BD", "BR", "DR", "FX", "GT", "HH", "LD", "PD",
+    "SN", "ST", "TM", "VX",
+)
+
 
 def main() -> int:
     """Run the stored-program listing command."""
@@ -26,6 +31,12 @@ def main() -> int:
         help="MIDI input port (defaults to the MIDI output port)",
     )
     parser.add_argument("--midi-output", help="MIDI output port")
+    parser.add_argument(
+        "-f",
+        "--filter",
+        choices=CATEGORY_CODES,
+        help="only show programs in this category",
+    )
     parser.add_argument(
         "--auto",
         action="store_true",
@@ -75,6 +86,8 @@ def main() -> int:
                     output, input_port, args.timeout
                 ):
                     name = program.name or "(unnamed)"
+                    if args.filter and not name.startswith(f"{args.filter} "):
+                        continue
                     print(
                         f"{program.bank} P{program.program:02d} {name}",
                         flush=True,
