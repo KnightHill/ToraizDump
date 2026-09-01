@@ -1,0 +1,990 @@
+U1 P01 BA Pro-One
+U1 P02 LD Feels So Good
+U1 P03 BA 3:03 AM
+U1 P04 LD Empty House
+U1 P05 LD Feels So Good
+U1 P06 AR Anxious Arp
+U1 P07 LD Big Raw Lead
+U1 P08 LD Eighty Core
+U1 P09 LD Anthem Beams
+U1 P10 ST Veldt-Orch
+U1 P11 LD Hard Industry
+U1 P12 BA Partytime Bass
+U1 P13 PD PressPlay
+U1 P14 BA Batt PWM Stabs
+U1 P15 BA FrogParty
+U1 P16 BA Heavy Stepper
+U1 P17 P16 AR 80's Suspense
+U1 P18 BR Brass Echoes
+U1 P19 LD PulseWitlessMod
+U1 P20 LD Rood Raw Lead
+U1 P21 LD Clean Lead
+U1 P22 BA Boa Bass
+U1 P23 PD Slider Removes
+U1 P24 AR Metro Arpeggio
+U1 P25 LD Atwater Punk
+U1 P26 BA Funky Chop
+U1 P27 LD Zow Lead
+U1 P28 AR Thin Echoes
+U1 P29 LD Cartridge Lead
+U1 P30 BA Plucked Synth
+U1 P31 LD PastelJazzLead
+U1 P32 BA Beefy Deacon
+U1 P33 LD NuElectricFriend
+U1 P34 AR Simpulse
+U1 P35 BA 70s Clav Bass
+U1 P36 LD WavyAttackSyn
+U1 P37 SN Spercussion
+U1 P38 AR SoftArpeggio
+U1 P39 LD Slider Sync
+U1 P40 PD Filtronics
+U1 P41 BA Squirter
+U1 P42 FX Smothered Hope
+U1 P43 LD PluckedSonar
+U1 P44 BD 8 0 8
+U1 P45 LD Sierras
+U1 P46 BA Dirty Drones
+U1 P47 BA SliderBox
+U1 P48 AR Pinging Shuffle
+U1 P49 FX Noisy Horror
+U1 P50 LD Fat PW
+U1 P51 FX P5 51
+U1 P52 HH Cheap Hats
+U1 P53 BA BassX
+U1 P54 LD House Trax
+U1 P55 BR BrassyPioneer
+U1 P56 FX TrillSpace
+U1 P57 AR Tiny EP
+U1 P58 BA Buzzie Bass
+U1 P59 FX P5 55
+U1 P60 LD Busted Squares
+U1 P61 PD Pond Drop Pad
+U1 P62 LD NharmonicLead
+U1 P63 AR RndDrumBlips
+U1 P64 TM Deep Drum
+U1 P65 BA SpyMovie
+U1 P66 BA BlueTube Splat
+U1 P67 PD Buchla Style
+U1 P68 AR Tin Man
+U1 P69 LD Big Glider
+U1 P70 BA CatPeeple
+U1 P71 FX Spring Bells
+U1 P72 BA Ramped Pulse
+U1 P73 LD MedEvil
+U1 P74 AR TinnitusArp
+U1 P75 FX Vari Blips
+U1 P76 BA Mako Bass
+U1 P77 HH Instant Intro
+U1 P78 AR Krafted Klick
+U1 P79 FX Metal Field
+U1 P80 BA Utilibass
+U1 P81 LD Prof Pluck
+U1 P82 AR Vesuvius
+U1 P83 PD Krafty
+U1 P84 BA D((o))((o))m
+U1 P85 LD WarmSpace
+U1 P86 LD Thin Sqre Trill
+U1 P87 BA Soft Lead Bass
+U1 P88 BA Cabinet E Bass
+U1 P89 AR DataDrumSeq
+U1 P90 LD 1 9 7X
+U1 P91 BR Horn Stabs
+U1 P92 PD Is It Finished?
+U1 P93 BA Phattie Bass
+U1 P94 AR Nylon Pluck
+U1 P95 LD Burny's Blaster
+U1 P96 LD Mass Effect
+U1 P97 LD Fusion Lead
+U1 P98 LD Feels So Good
+U1 P99 LD Feels So Good
+U2 P01 LD JustifiedAncient
+U2 P02 LD Cascade
+U2 P03 LD Thick AS-1
+U2 P04 BA Shimmertrill
+U2 P05 BA Street Pulse
+U2 P06 LD Rails
+U2 P07 AR SawPeggio
+U2 P08 BA SourceOrdBass
+U2 P09 FX AS Sprites
+U2 P10 PD Sizzling Sweep
+U2 P11 BA Eighties Bass
+U2 P12 AR PW '79
+U2 P13 BA Durtbomb
+U2 P14 BA DarkOctBass
+U2 P15 LD Cindy's Coat
+U2 P16 LD VibroTrax
+U2 P17 AR SparklPeggio
+U2 P18 BA Skwaah! AT
+U2 P19 LDDreamsComeTru
+U2 P20 PD DoikWahh
+U2 P21 BA WheeDooo Bass
+U2 P22 FX Space Marimba
+U2 P23 LD Dream Synth
+U2 P24 AR XXL Mutante
+U2 P25 BA FM Bass1
+U2 P26 LD P5 36
+U2 P27 BA Terminator Seq
+U2 P28 FX Take It Up
+U2 P29 AR ShortString Arp
+U2 P30 LD BetaSax
+U2 P31 BA 2Transistor
+U2 P32 LD Song Square
+U2 P33 GT Cheap Gtr Pluck
+U2 P34 BA Funklavelectro
+U2 P35 AR Thin Wire Arp
+U2 P36 LD Bath Tine
+U2 P37 PD S U R V I V 0 R
+U2 P38 BA Twi-ZoneBass
+U2 P39 PD Etherical
+U2 P40 U1 P99 PD Low Doom S
+U2 P41 LD Pro Uno Lead
+U2 P42 FX For The Birds
+U2 P43 LD RndSyncLease
+U2 P44 AR SequePulse
+U2 P45 BA Herr X
+U2 P46 LD Ancient Organ
+U2 P47 LD Synth on Wheels
+U2 P48 AR StruckBridge
+U2 P49 BA Qknox Bass
+U2 P50 FX DataBender
+U2 P51 AR ElektroBanjo
+U2 P52 BA SliderRootKey
+U2 P53 LD Wah!
+U2 P54 AR FMarp
+U2 P55 FX PhoneyRepeater
+U2 P56 PD P5 43
+U2 P57 LD SimpleZow
+U2 P58 BA FM Sync
+U2 P59 BA PortagePlucks
+U2 P60 AR BugsChewingArp
+U2 P61 BA Under Tow
+U2 P62 LD Proover
+U2 P63 LD Lonely Phases
+U2 P64 AR RainCatch
+U2 P65 PD Basic Uno 60
+U2 P66 BA NiceWetPluck
+U2 P67 LD Lazy Slippy
+U2 P68 FX AssemblyLine
+U2 P69 BR Love&Brass
+U2 P70 FX ChooChooWoo
+U2 P71 PD P5 45
+U2 P72 LD DeepSyncLead
+U2 P73 FX BigBell
+U2 P74 AR Bizzare Things
+U2 P75 FX Funkazooka
+U2 P76 BA sBassEcho
+U2 P77 BA LizardBass
+U2 P78 LD BigBrightLead
+U2 P79 BA Distro Bass
+U2 P80 BA Dowowowow
+U2 P81 PD SlowS&HPad
+U2 P82 AR Voltaire
+U2 P83 DR Bassixteen
+U2 P84 BA Bass Matter
+U2 P85 AR Plex Stepper
+U2 P86 BA 10sions
+U2 P87 LD Start Me Up
+U2 P88 BA WalkOnTheBeach
+U2 P89 AR Clanking
+U2 P90 TM Electric Tom
+U2 P91 AR Mad Hatter
+U2 P92 BD Kick'n
+U2 P93 SN Little Snare
+U2 P94 DR Breezy Bongo
+U2 P95 BA RubberPans
+U2 P96 AR Metallic Slider
+U2 P97 DR 2WayFM Balibell
+U2 P98 TM LoAir
+U2 P99 PD Quasars
+U3 P01 BA Synthyvale
+U3 P02 BA Panopticon
+U3 P03 LDAnalogHouseOrg
+U3 P04 LD Mirror Ball Lead
+U3 P05 LD SynthNoiseDrips
+U3 P06 LD Sloppy Oxy
+U3 P07 LD TrillyLead
+U3 P08 BA Thick Bass
+U3 P09 ST Old String
+U3 P10 LD Fanfare5ths
+U3 P11 LD EvoSync
+U3 P12 LD Cloud Machine
+U3 P13 PD SquaresInSpace
+U3 P14 LD Pitchy Synth
+U3 P15 BA Dark Rez S
+U3 P16 AR DustyPloinky
+U3 P17 AR Crocketts Arp
+U3 P18 LD Tracer
+U3 P19 PD EtherialString
+U3 P20 BA Swarm Bass
+U3 P21 LD Turtle Beach
+U3 P22 LD Eclectic Party
+U3 P23 LD Grand Deus
+U3 P24 BAUndrDaThundr
+U3 P25 AR GlssyFltrSweep
+U3 P26 BA Bass Arts
+U3 P27 PD Monopad
+U3 P28 LD Loose Change
+U3 P29 LD Little House
+U3 P30 BA Richard H Seq
+U3 P31 GT P5 33
+U3 P32 AR Knocking ARP
+U3 P33 LD Distrezor
+U3 P34 PD Dotted Lines
+U3 P35 BA V Bass
+U3 P36 LD Synthetic Metal
+U3 P37 AR HP Arp
+U3 P38 LD Clavi-Synth
+U3 P39 BA Speed Operator
+U3 P40 LD Therevibe
+U3 P41 LD SnarlSync
+U3 P42 FX Cuts Crystals
+U3 P43 BA Bronto Bass
+U3 P44 BA TeslaTinkerToy
+U3 P45 PD Dream Pad
+U3 P46 LD Dirty Slide
+U3 P47 LD CrunchyWubbles
+U3 P48 FX Waterlogue
+U3 P49 BA P5 13
+U3 P50 LD Hard FM
+U3 P51 BA Purrrr Bass
+U3 P52 LD Dusty Neon Lead
+U3 P53 FX Magnetic Lazers
+U3 P54 LD InvadingBeez
+U3 P55 AR One2MnyRhythm
+U3 P56 BA Big Sub
+U3 P57 AR WhatDidIThink?
+U3 P58 BA Velorezz
+U3 P59 PD Stubbled
+U3 P60 AR SlidingScaleDust
+U3 P61 BA FM Bass2
+U3 P62 LD SinisterSyncSlide
+U3 P63 LD ResoRinger
+U3 P64 BA Cinequence
+U3 P65 LD Raspy Lead
+U3 P66 LD P5 35
+U3 P67 BA No Idea
+U3 P68 FX Alien Mesmer
+U3 P69 BA FM Bass
+U3 P70 LD P5 16
+U3 P71 LD Nasty Rez Lead
+U3 P72 AR E-Piano-ish
+U3 P73 LD Welcome Back!
+U3 P74 BA Dirty 8's
+U3 P75 DR Metal Percs
+U3 P76 TM SynDrumrArp
+U3 P77 LD P5 17
+U3 P78 DR FM PlunkrDrums
+U3 P79 AR Broken Machine
+U3 P80 LD Kem Doubt
+U3 P81 BA Roman Rolandski
+U3 P82 BA Bon's Bass
+U3 P83 PD Ridley Blast
+U3 P84 BA Sub-Merged
+U3 P85 AR Marzipan Seq
+U3 P86 LD Pollead
+U3 P87 BA MudButt
+U3 P88 AR Bad Self
+U3 P89 LD Hard Synth
+U3 P90 BA Overtone Bass
+U3 P91 DR Tempani
+U3 P92 BA ResComp1
+U3 P93 BD Low Rent Kick
+U3 P94 AR Metalic Thing
+U3 P95 BA S&H Grinder
+U3 P96 LD Not Quite Right
+U3 P97 PD Metallizer
+U3 P98 BA Grouchy
+U3 P99 BA Buzz Bomb
+U4 P01 LD Ragged Lead
+U4 P02 LD Sevin Hevin
+U4 P03 BA BoinkBass
+U4 P04 LD Slide Shifter
+U4 P05 BA Acid RE-Flux
+U4 P06 AR ReedyArpeggio
+U4 P07 PD Wavetableu
+U4 P08 LD GlimmerLead
+U4 P09 BABassWindscreen
+U4 P10 LD Useful Lead
+U4 P11 AR Red's Not Dead!
+U4 P12 LD Leed
+U4 P13 BA GreeseBeese
+U4 P14 GT Phisolation
+U4 P15 LD Syncing
+U4 P16 LD 1 String Samurai
+U4 P17 LD Moody Lead
+U4 P18 AR WhappyBrass
+U4 P19 BA OrangeNitemare
+U4 P20 BR J-Wire Brass
+U4 P21 LD Woody Pianetta
+U4 P22 LD Transistor Org
+U4 P23 BA Cold Waver
+U4 P24 LD Hisstemic
+U4 P25 BA Wobbulatorizer
+U4 P26 AR Rudepeggio
+U4 P27 BA Analogics
+U4 P28 BA FEmmy
+U4 P29 BA Baumann Bass
+U4 P30 LD Biggie
+U4 P31 LD Gleeding Edge
+U4 P32 AR Tiny Arp
+U4 P33 PD Holstian Orbs
+U4 P34 LD Smooth Wurl
+U4 P35 BA ThickyLakeBass
+U4 P36 ST FaseSnotString
+U4 P37 BA Wobullizer
+U4 P38 VX Aah!
+U4 P39 BA SludgeFoot
+U4 P40 AR Strangers
+U4 P41 PD Eccentrical
+U4 P42 LD HP Lead
+U4 P43 BA Just Like Bass
+U4 P44 BR Regal Brass
+U4 P45 BAFazed&Confused
+U4 P46 LD Grunge Lead
+U4 P47 PD Older Machine
+U4 P48 BR Plucky Clav
+U4 P49 AR HollowGram
+U4 P50 LD Headland
+U4 P51 LD Clark Lead
+U4 P52 LD ProcessedPluck
+U4 P53 LD Fonky Box
+U4 P54 BA Eleven's Bass
+U4 P55 LD PlunkoOrgan
+U4 P56 LD Barcode
+U4 P57 LD GrindyPianots
+U4 P58 LD How Rudde
+U4 P59 BA Cyber Funk
+U4 P60 FXDestructedPulse
+U4 P61 LD HorrorThingz
+U4 P62 BA VintageBass
+U4 P63 AR FlutteringFilters
+U4 P64 LD WideFurryLead
+U4 P65 LD Strange Age
+U4 P66 DR PitchyPercussion
+U4 P67 FX WormWah
+U4 P68 BA BipBapBass
+U4 P69 LD Planet Juno
+U4 P70 AR RubberMallets
+U4 P71 DR Reso Drum
+U4 P72 PD Epic Sync
+U4 P73 LD Nervousring
+U4 P74 BA Gow
+U4 P75 HH Hi Hat
+U4 P76 AR Grand Master
+U4 P77 LD Flutter
+U4 P78 LD Mr. Squeaps
+U4 P79 BA Pass the Bass
+U4 P80 AR Melting Slowly
+U4 P81 LD Old Fuzzy
+U4 P82 FX Sample & Grit
+U4 P83 BR P5 11
+U4 P84 BA Gowpalace
+U4 P85 BD Processed Kick
+U4 P86 AR MechTiming
+U4 P87 DR DampWoodblock
+U4 P88 BA Mirror Bass
+U4 P89 DR Steel Ribbons
+U4 P90 LD Transom
+U4 P91 AR ArcPeggio
+U4 P92 FX GalactixBlast
+U4 P93 FX Moly-Mod
+U4 P94 LD Shiloh
+U4 P95 LD MachineMusic
+U4 P96 AR Tinker Factory
+U4 P97 LD FluStir
+U4 P98 LD Flex Lead
+U4 P99 AR Aeon Arp
+U5 P01 LD HollowWords
+U5 P02 LD Air Organ
+U5 P03 BA RezzBuzz
+U5 P04 AR SpacePants
+U5 P05 LD Whovian Slide
+U5 P06 LD SoStacked
+U5 P07 BA Gargle Bass
+U5 P08 LD Nick PWM
+U5 P09 LD ZibbleZabble
+U5 P10 AR BubblyBomb
+U5 P11 ST Stringee
+U5 P12 BA Square Power
+U5 P13 BA Rachine
+U5 P14 BA BoxicMat5ram
+U5 P15 LD Elation Chords
+U5 P16 BA SeqPlaySlide
+U5 P17 ST At the Gates
+U5 P18 LD AT Bendy Lead
+U5 P19 PD Jaso  One
+U5 P20 AR Baila Italo Arp
+U5 P21 LD Snarl
+U5 P22 BA Hard Knox
+U5 P23 LD Ooowoah
+U5 P24 AR Duran Duarp
+U5 P25 BA Thin Wide Bass
+U5 P26 LD WateryPhase
+U5 P27 BR Brassics
+U5 P28 DR Drummffs!!
+U5 P29 LD F'WhipperSnap
+U5 P30 AR Cute Arp
+U5 P31 BA D.A.F. SEQ
+U5 P32 LD ChemiklMothers
+U5 P33 BA Sluggo Synth
+U5 P34 AR Animator Lead
+U5 P35 VX Little Robot
+U5 P36 BA InhaledBass
+U5 P37 LD OldRecordPad
+U5 P38 LD Dirty Womper
+U5 P39 AR Ion83
+U5 P40 FX Lost Coast
+U5 P41 BA BassAssembly
+U5 P42 BA Plinky's Bat
+U5 P43 AR WrongTrousers
+U5 P44 BA ResistanceBass
+U5 P45 LD T8 Piano
+U5 P46 BA Aggro Bass
+U5 P47 BD NervousKick
+U5 P48 FX Broken Bells
+U5 P49 BA AutoSeeker
+U5 P50 DR Sonar Drums
+U5 P51 BA Afro Phuturism
+U5 P52 AR Tesseract
+U5 P53 LD 8BitGameMelody
+U5 P54 LD Mercury Poly
+U5 P55 BA Funky Lil AS1
+U5 P56 PD Electrokalimba
+U5 P57 AR Basic Arp
+U5 P58 FX Spiral Winds
+U5 P59 PD ComplexWave
+U5 P60 LD 5th House
+U5 P61 LD OrbitalCarWash
+U5 P62 AR Amiga Chop
+U5 P63 LD Unclean Lead
+U5 P64 BA Bass 2 Da Boan
+U5 P65 LD Toy Speaker
+U5 P66 LD Nova Lead
+U5 P67 AR Bowen's Arp
+U5 P68 PD Space Program
+U5 P69 LD Hugo There
+U5 P70 LD Sloppy Slap
+U5 P71 BA Slam Bass
+U5 P72 AR Dream Scape
+U5 P73 FX Brainscanners
+U5 P74 BA Vince Please
+U5 P75 PD Flutter
+U5 P76 LD HappyCamper
+U5 P77 AR BuchlaSteam
+U5 P78 LD Twinkler
+U5 P79 PD PostalPings
+U5 P80 BA Portable D Bass
+U5 P81 LD BW Lead
+U5 P82 AR High Roller
+U5 P83 BA Noice Bass
+U5 P84 LD Bowed VCOs
+U5 P85 BA Basss Dance
+U5 P86 BA Moist Bass
+U5 P87 AR Henry Twinkler
+U5 P88 LD All Purpose Sync
+U5 P89 LD AT Harmonics
+U5 P90 LD Skinny Lead
+U5 P91 BA Retro Bass
+U5 P92 AR HappySpoons
+U5 P93 BA Chors&RM Bass
+U5 P94 BA Seventies Bass
+U5 P95 BA Harsh RM Bass
+U5 P96 AR BubblePerc
+U5 P97 LD Prog Lead Dude
+U5 P98 LD Unlikely Release
+U5 P99 It's a Prophet...!
+F1 P01 BA Pro-One
+F1 P02 LD Feels So Good
+F1 P03 BA 3:03 AM
+F1 P04 LD Empty House
+F1 P05 BA Derpy Donk
+F1 P06 AR Anxious Arp
+F1 P07 LD Big Raw Lead
+F1 P08 LD Eighty Core
+F1 P09 LD Anthem Beams
+F1 P10 ST Veldt-Orch
+F1 P11 LD Hard Industry
+F1 P12 BA Partytime Bass
+F1 P13 PD PressPlay
+F1 P14 BA Batt PWM Stabs
+F1 P15 BA FrogParty
+F1 P16 BA Heavy Stepper
+F1 P17 P16 AR 80's Suspense
+F1 P18 BR Brass Echoes
+F1 P19 LD PulseWitlessMod
+F1 P20 LD Rood Raw Lead
+F1 P21 LD Clean Lead
+F1 P22 BA Boa Bass
+F1 P23 PD Slider Removes
+F1 P24 AR Metro Arpeggio
+F1 P25 LD Atwater Punk
+F1 P26 BA Funky Chop
+F1 P27 LD Zow Lead
+F1 P28 AR Thin Echoes
+F1 P29 LD Cartridge Lead
+F1 P30 BA Plucked Synth
+F1 P31 LD PastelJazzLead
+F1 P32 BA Beefy Deacon
+F1 P33 LD NuElectricFriend
+F1 P34 AR Simpulse
+F1 P35 BA 70s Clav Bass
+F1 P36 LD WavyAttackSyn
+F1 P37 SN Spercussion
+F1 P38 AR SoftArpeggio
+F1 P39 LD Slider Sync
+F1 P40 PD Filtronics
+F1 P41 BA Squirter
+F1 P42 FX Smothered Hope
+F1 P43 LD PluckedSonar
+F1 P44 BD 8 0 8
+F1 P45 LD Sierras
+F1 P46 BA Dirty Drones
+F1 P47 BA SliderBox
+F1 P48 AR Pinging Shuffle
+F1 P49 FX Noisy Horror
+F1 P50 LD Fat PW
+F1 P51 FX P5 51
+F1 P52 HH Cheap Hats
+F1 P53 BA BassX
+F1 P54 LD House Trax
+F1 P55 BR BrassyPioneer
+F1 P56 FX TrillSpace
+F1 P57 AR Tiny EP
+F1 P58 BA Buzzie Bass
+F1 P59 FX P5 55
+F1 P60 LD Busted Squares
+F1 P61 PD Pond Drop Pad
+F1 P62 LD NharmonicLead
+F1 P63 AR RndDrumBlips
+F1 P64 TM Deep Drum
+F1 P65 BA SpyMovie
+F1 P66 BA BlueTube Splat
+F1 P67 PD Buchla Style
+F1 P68 AR Tin Man
+F1 P69 LD Big Glider
+F1 P70 BA CatPeeple
+F1 P71 FX Spring Bells
+F1 P72 BA Ramped Pulse
+F1 P73 LD MedEvil
+F1 P74 AR TinnitusArp
+F1 P75 FX Vari Blips
+F1 P76 BA Mako Bass
+F1 P77 HH Instant Intro
+F1 P78 AR Krafted Klick
+F1 P79 FX Metal Field
+F1 P80 BA Utilibass
+F1 P81 LD Prof Pluck
+F1 P82 AR Vesuvius
+F1 P83 PD Krafty
+F1 P84 BA D((o))((o))m
+F1 P85 LD WarmSpace
+F1 P86 LD Thin Sqre Trill
+F1 P87 BA Soft Lead Bass
+F1 P88 BA Cabinet E Bass
+F1 P89 AR DataDrumSeq
+F1 P90 LD 1 9 7X
+F1 P91 BR Horn Stabs
+F1 P92 PD Is It Finished?
+F1 P93 BA Phattie Bass
+F1 P94 AR Nylon Pluck
+F1 P95 LD Burny's Blaster
+F1 P96 LD Mass Effect
+F1 P97 LD Fusion Lead
+F1 P98 HH Phasing Hat
+F1 P99 LD Band Saw Lead
+F2 P01 LD JustifiedAncient
+F2 P02 LD Cascade
+F2 P03 LD Thick AS-1
+F2 P04 BA Shimmertrill
+F2 P05 BA Street Pulse
+F2 P06 LD Rails
+F2 P07 AR SawPeggio
+F2 P08 BA SourceOrdBass
+F2 P09 FX AS Sprites
+F2 P10 PD Sizzling Sweep
+F2 P11 BA Eighties Bass
+F2 P12 AR PW '79
+F2 P13 BA Durtbomb
+F2 P14 BA DarkOctBass
+F2 P15 LD Cindy's Coat
+F2 P16 LD VibroTrax
+F2 P17 AR SparklPeggio
+F2 P18 BA Skwaah! AT
+F2 P19 LDDreamsComeTru
+F2 P20 PD DoikWahh
+F2 P21 BA WheeDooo Bass
+F2 P22 FX Space Marimba
+F2 P23 LD Dream Synth
+F2 P24 AR XXL Mutante
+F2 P25 BA FM Bass1
+F2 P26 LD P5 36
+F2 P27 BA Terminator Seq
+F2 P28 FX Take It Up
+F2 P29 AR ShortString Arp
+F2 P30 LD BetaSax
+F2 P31 BA 2Transistor
+F2 P32 LD Song Square
+F2 P33 GT Cheap Gtr Pluck
+F2 P34 BA Funklavelectro
+F2 P35 AR Thin Wire Arp
+F2 P36 LD Bath Tine
+F2 P37 PD S U R V I V 0 R
+F2 P38 BA Twi-ZoneBass
+F2 P39 PD Etherical
+F2 P40 U1 P99 PD Low Doom S
+F2 P41 LD Pro Uno Lead
+F2 P42 FX For The Birds
+F2 P43 LD RndSyncLease
+F2 P44 AR SequePulse
+F2 P45 BA Herr X
+F2 P46 LD Ancient Organ
+F2 P47 LD Synth on Wheels
+F2 P48 AR StruckBridge
+F2 P49 BA Qknox Bass
+F2 P50 FX DataBender
+F2 P51 AR ElektroBanjo
+F2 P52 BA SliderRootKey
+F2 P53 LD Wah!
+F2 P54 AR FMarp
+F2 P55 FX PhoneyRepeater
+F2 P56 PD P5 43
+F2 P57 LD SimpleZow
+F2 P58 BA FM Sync
+F2 P59 BA PortagePlucks
+F2 P60 AR BugsChewingArp
+F2 P61 BA Under Tow
+F2 P62 LD Proover
+F2 P63 LD Lonely Phases
+F2 P64 AR RainCatch
+F2 P65 PD Basic Uno 60
+F2 P66 BA NiceWetPluck
+F2 P67 LD Lazy Slippy
+F2 P68 FX AssemblyLine
+F2 P69 BR Love&Brass
+F2 P70 FX ChooChooWoo
+F2 P71 PD P5 45
+F2 P72 LD DeepSyncLead
+F2 P73 FX BigBell
+F2 P74 AR Bizzare Things
+F2 P75 FX Funkazooka
+F2 P76 BA sBassEcho
+F2 P77 BA LizardBass
+F2 P78 LD BigBrightLead
+F2 P79 BA Distro Bass
+F2 P80 BA Dowowowow
+F2 P81 PD SlowS&HPad
+F2 P82 AR Voltaire
+F2 P83 DR Bassixteen
+F2 P84 BA Bass Matter
+F2 P85 AR Plex Stepper
+F2 P86 BA 10sions
+F2 P87 LD Start Me Up
+F2 P88 BA WalkOnTheBeach
+F2 P89 AR Clanking
+F2 P90 TM Electric Tom
+F2 P91 AR Mad Hatter
+F2 P92 BD Kick'n
+F2 P93 SN Little Snare
+F2 P94 DR Breezy Bongo
+F2 P95 BA RubberPans
+F2 P96 AR Metallic Slider
+F2 P97 DR 2WayFM Balibell
+F2 P98 TM LoAir
+F2 P99 PD Quasars
+F3 P01 BA Synthyvale
+F3 P02 BA Panopticon
+F3 P03 LDAnalogHouseOrg
+F3 P04 LD Mirror Ball Lead
+F3 P05 LD SynthNoiseDrips
+F3 P06 LD Sloppy Oxy
+F3 P07 LD TrillyLead
+F3 P08 BA Thick Bass
+F3 P09 ST Old String
+F3 P10 LD Fanfare5ths
+F3 P11 LD EvoSync
+F3 P12 LD Cloud Machine
+F3 P13 PD SquaresInSpace
+F3 P14 LD Pitchy Synth
+F3 P15 BA Dark Rez S
+F3 P16 AR DustyPloinky
+F3 P17 AR Crocketts Arp
+F3 P18 LD Tracer
+F3 P19 PD EtherialString
+F3 P20 BA Swarm Bass
+F3 P21 LD Turtle Beach
+F3 P22 LD Eclectic Party
+F3 P23 LD Grand Deus
+F3 P24 BAUndrDaThundr
+F3 P25 AR GlssyFltrSweep
+F3 P26 BA Bass Arts
+F3 P27 PD Monopad
+F3 P28 LD Loose Change
+F3 P29 LD Little House
+F3 P30 BA Richard H Seq
+F3 P31 GT P5 33
+F3 P32 AR Knocking ARP
+F3 P33 LD Distrezor
+F3 P34 PD Dotted Lines
+F3 P35 BA V Bass
+F3 P36 LD Synthetic Metal
+F3 P37 AR HP Arp
+F3 P38 LD Clavi-Synth
+F3 P39 BA Speed Operator
+F3 P40 LD Therevibe
+F3 P41 LD SnarlSync
+F3 P42 FX Cuts Crystals
+F3 P43 BA Bronto Bass
+F3 P44 BA TeslaTinkerToy
+F3 P45 PD Dream Pad
+F3 P46 LD Dirty Slide
+F3 P47 LD CrunchyWubbles
+F3 P48 FX Waterlogue
+F3 P49 BA P5 13
+F3 P50 LD Hard FM
+F3 P51 BA Purrrr Bass
+F3 P52 LD Dusty Neon Lead
+F3 P53 FX Magnetic Lazers
+F3 P54 LD InvadingBeez
+F3 P55 AR One2MnyRhythm
+F3 P56 BA Big Sub
+F3 P57 AR WhatDidIThink?
+F3 P58 BA Velorezz
+F3 P59 PD Stubbled
+F3 P60 AR SlidingScaleDust
+F3 P61 BA FM Bass2
+F3 P62 LD SinisterSyncSlide
+F3 P63 LD ResoRinger
+F3 P64 BA Cinequence
+F3 P65 LD Raspy Lead
+F3 P66 LD P5 35
+F3 P67 BA No Idea
+F3 P68 FX Alien Mesmer
+F3 P69 BA FM Bass
+F3 P70 LD P5 16
+F3 P71 LD Nasty Rez Lead
+F3 P72 AR E-Piano-ish
+F3 P73 LD Welcome Back!
+F3 P74 BA Dirty 8's
+F3 P75 DR Metal Percs
+F3 P76 TM SynDrumrArp
+F3 P77 LD P5 17
+F3 P78 DR FM PlunkrDrums
+F3 P79 AR Broken Machine
+F3 P80 LD Kem Doubt
+F3 P81 BA Roman Rolandski
+F3 P82 BA Bon's Bass
+F3 P83 PD Ridley Blast
+F3 P84 BA Sub-Merged
+F3 P85 AR Marzipan Seq
+F3 P86 LD Pollead
+F3 P87 BA MudButt
+F3 P88 AR Bad Self
+F3 P89 LD Hard Synth
+F3 P90 BA Overtone Bass
+F3 P91 DR Tempani
+F3 P92 BA ResComp1
+F3 P93 BD Low Rent Kick
+F3 P94 AR Metalic Thing
+F3 P95 BA S&H Grinder
+F3 P96 LD Not Quite Right
+F3 P97 PD Metallizer
+F3 P98 BA Grouchy
+F3 P99 BA Buzz Bomb
+F4 P01 LD Ragged Lead
+F4 P02 LD Sevin Hevin
+F4 P03 BA BoinkBass
+F4 P04 LD Slide Shifter
+F4 P05 BA Acid RE-Flux
+F4 P06 AR ReedyArpeggio
+F4 P07 PD Wavetableu
+F4 P08 LD GlimmerLead
+F4 P09 BABassWindscreen
+F4 P10 LD Useful Lead
+F4 P11 AR Red's Not Dead!
+F4 P12 LD Leed
+F4 P13 BA GreeseBeese
+F4 P14 GT Phisolation
+F4 P15 LD Syncing
+F4 P16 LD 1 String Samurai
+F4 P17 LD Moody Lead
+F4 P18 AR WhappyBrass
+F4 P19 BA OrangeNitemare
+F4 P20 BR J-Wire Brass
+F4 P21 LD Woody Pianetta
+F4 P22 LD Transistor Org
+F4 P23 BA Cold Waver
+F4 P24 LD Hisstemic
+F4 P25 BA Wobbulatorizer
+F4 P26 AR Rudepeggio
+F4 P27 BA Analogics
+F4 P28 BA FEmmy
+F4 P29 BA Baumann Bass
+F4 P30 LD Biggie
+F4 P31 LD Gleeding Edge
+F4 P32 AR Tiny Arp
+F4 P33 PD Holstian Orbs
+F4 P34 LD Smooth Wurl
+F4 P35 BA ThickyLakeBass
+F4 P36 ST FaseSnotString
+F4 P37 BA Wobullizer
+F4 P38 VX Aah!
+F4 P39 BA SludgeFoot
+F4 P40 AR Strangers
+F4 P41 PD Eccentrical
+F4 P42 LD HP Lead
+F4 P43 BA Just Like Bass
+F4 P44 BR Regal Brass
+F4 P45 BAFazed&Confused
+F4 P46 LD Grunge Lead
+F4 P47 PD Older Machine
+F4 P48 BR Plucky Clav
+F4 P49 AR HollowGram
+F4 P50 LD Headland
+F4 P51 LD Clark Lead
+F4 P52 LD ProcessedPluck
+F4 P53 LD Fonky Box
+F4 P54 BA Eleven's Bass
+F4 P55 LD PlunkoOrgan
+F4 P56 LD Barcode
+F4 P57 LD GrindyPianots
+F4 P58 LD How Rudde
+F4 P59 BA Cyber Funk
+F4 P60 FXDestructedPulse
+F4 P61 LD HorrorThingz
+F4 P62 BA VintageBass
+F4 P63 AR FlutteringFilters
+F4 P64 LD WideFurryLead
+F4 P65 LD Strange Age
+F4 P66 DR PitchyPercussion
+F4 P67 FX WormWah
+F4 P68 BA BipBapBass
+F4 P69 LD Planet Juno
+F4 P70 AR RubberMallets
+F4 P71 DR Reso Drum
+F4 P72 PD Epic Sync
+F4 P73 LD Nervousring
+F4 P74 BA Gow
+F4 P75 HH Hi Hat
+F4 P76 AR Grand Master
+F4 P77 LD Flutter
+F4 P78 LD Mr. Squeaps
+F4 P79 BA Pass the Bass
+F4 P80 AR Melting Slowly
+F4 P81 LD Old Fuzzy
+F4 P82 FX Sample & Grit
+F4 P83 BR P5 11
+F4 P84 BA Gowpalace
+F4 P85 BD Processed Kick
+F4 P86 AR MechTiming
+F4 P87 DR DampWoodblock
+F4 P88 BA Mirror Bass
+F4 P89 DR Steel Ribbons
+F4 P90 LD Transom
+F4 P91 AR ArcPeggio
+F4 P92 FX GalactixBlast
+F4 P93 FX Moly-Mod
+F4 P94 LD Shiloh
+F4 P95 LD MachineMusic
+F4 P96 AR Tinker Factory
+F4 P97 LD FluStir
+F4 P98 LD Flex Lead
+F4 P99 AR Aeon Arp
+F5 P01 LD HollowWords
+F5 P02 LD Air Organ
+F5 P03 BA RezzBuzz
+F5 P04 AR SpacePants
+F5 P05 LD Whovian Slide
+F5 P06 LD SoStacked
+F5 P07 BA Gargle Bass
+F5 P08 LD Nick PWM
+F5 P09 LD ZibbleZabble
+F5 P10 AR BubblyBomb
+F5 P11 ST Stringee
+F5 P12 BA Square Power
+F5 P13 BA Rachine
+F5 P14 BA BoxicMat5ram
+F5 P15 LD Elation Chords
+F5 P16 BA SeqPlaySlide
+F5 P17 ST At the Gates
+F5 P18 LD AT Bendy Lead
+F5 P19 PD Jaso  One
+F5 P20 AR Baila Italo Arp
+F5 P21 LD Snarl
+F5 P22 BA Hard Knox
+F5 P23 LD Ooowoah
+F5 P24 AR Duran Duarp
+F5 P25 BA Thin Wide Bass
+F5 P26 LD WateryPhase
+F5 P27 BR Brassics
+F5 P28 DR Drummffs!!
+F5 P29 LD F'WhipperSnap
+F5 P30 AR Cute Arp
+F5 P31 BA D.A.F. SEQ
+F5 P32 LD ChemiklMothers
+F5 P33 BA Sluggo Synth
+F5 P34 AR Animator Lead
+F5 P35 VX Little Robot
+F5 P36 BA InhaledBass
+F5 P37 LD OldRecordPad
+F5 P38 LD Dirty Womper
+F5 P39 AR Ion83
+F5 P40 FX Lost Coast
+F5 P41 BA BassAssembly
+F5 P42 BA Plinky's Bat
+F5 P43 AR WrongTrousers
+F5 P44 BA ResistanceBass
+F5 P45 LD T8 Piano
+F5 P46 BA Aggro Bass
+F5 P47 BD NervousKick
+F5 P48 FX Broken Bells
+F5 P49 BA AutoSeeker
+F5 P50 DR Sonar Drums
+F5 P51 BA Afro Phuturism
+F5 P52 AR Tesseract
+F5 P53 LD 8BitGameMelody
+F5 P54 LD Mercury Poly
+F5 P55 BA Funky Lil AS1
+F5 P56 PD Electrokalimba
+F5 P57 AR Basic Arp
+F5 P58 FX Spiral Winds
+F5 P59 PD ComplexWave
+F5 P60 LD 5th House
+F5 P61 LD OrbitalCarWash
+F5 P62 AR Amiga Chop
+F5 P63 LD Unclean Lead
+F5 P64 BA Bass 2 Da Boan
+F5 P65 LD Toy Speaker
+F5 P66 LD Nova Lead
+F5 P67 AR Bowen's Arp
+F5 P68 PD Space Program
+F5 P69 LD Hugo There
+F5 P70 LD Sloppy Slap
+F5 P71 BA Slam Bass
+F5 P72 AR Dream Scape
+F5 P73 FX Brainscanners
+F5 P74 BA Vince Please
+F5 P75 PD Flutter
+F5 P76 LD HappyCamper
+F5 P77 AR BuchlaSteam
+F5 P78 LD Twinkler
+F5 P79 PD PostalPings
+F5 P80 BA Portable D Bass
+F5 P81 LD BW Lead
+F5 P82 AR High Roller
+F5 P83 BA Noice Bass
+F5 P84 LD Bowed VCOs
+F5 P85 BA Basss Dance
+F5 P86 BA Moist Bass
+F5 P87 AR Henry Twinkler
+F5 P88 LD All Purpose Sync
+F5 P89 LD AT Harmonics
+F5 P90 LD Skinny Lead
+F5 P91 BA Retro Bass
+F5 P92 AR HappySpoons
+F5 P93 BA Chors&RM Bass
+F5 P94 BA Seventies Bass
+F5 P95 BA Harsh RM Bass
+F5 P96 AR BubblePerc
+F5 P97 LD Prog Lead Dude
+F5 P98 LD Unlikely Release
+F5 P99 It's a Prophet...!
