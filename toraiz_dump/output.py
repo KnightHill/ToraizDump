@@ -5,15 +5,13 @@ from __future__ import annotations
 from typing import BinaryIO
 
 import mido
+from blessed import Terminal
 
 from .protocol import SequencerData
 
 TICKS_PER_BEAT = 480
 # Kept as the default sixteenth-note duration for callers that import it.
 STEP_TICKS = TICKS_PER_BEAT // 4
-GROUP_BLUE = "\033[38;2;80;160;255m"
-GROUP_PURPLE = "\033[38;2;180;120;255m"
-COLOR_RESET = "\033[0m"
 
 
 def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
@@ -36,13 +34,22 @@ def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
     }
 
 
-def sequence_as_display(sequence: SequencerData) -> str:
+def sequence_as_display(
+    sequence: SequencerData,
+    terminal: Terminal | None = None,
+) -> str:
     """Return a compact visual representation of the active sequence steps.
 
     A regular note occupies seven eighths of its cell.  A tie on the current
     step extends the preceding note to a full cell.  The line below the steps
     marks groups of four with alternating blue and purple upper eighth blocks.
     """
+
+    terminal = terminal or Terminal()
+    group_colors = (
+        terminal.color_rgb(80, 160, 255),
+        terminal.color_rgb(180, 120, 255),
+    )
 
     boxes: list[str] = []
     for index, step in enumerate(sequence.steps[: sequence.length]):
@@ -55,8 +62,8 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
     display = "".join(boxes)
     group_line = "".join(
-        f"{GROUP_BLUE if group % 2 == 0 else GROUP_PURPLE}"
-        f"{'▔' * min(4, len(boxes) - group * 4)}{COLOR_RESET}"
+        f"{group_colors[group % 2]}"
+        f"{'▔' * min(4, len(boxes) - group * 4)}{terminal.normal}"
         for group in range((len(boxes) + 3) // 4)
     )
     program_name = sequence.program_name or "(unnamed)"

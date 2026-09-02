@@ -8,7 +8,15 @@ returns all 64 sequencer steps; individual step queries are not required.
 
 ## Installation
 
+Python 3.10 or newer is required. `python-rtmidi` uses the native MIDI system
+on each supported platform: ALSA/JACK on Linux, CoreMIDI on macOS, and Windows
+Multimedia MIDI on Windows.
+
+### Linux and macOS
+
 ```bash
+python3 -m venv .venv
+. .venv/bin/activate
 python -m pip install -e .
 ```
 
@@ -16,16 +24,55 @@ This installs the `toraiz-dump` and `toraiz-programs` commands into the active
 Python environment. Run the installation command again after updating an
 existing checkout so the new launcher is created.
 
-The repository also contains shortcuts that can be run directly from its root
-without activating the virtual environment:
+Linux and macOS also have repository shortcuts that can be run directly from
+the project root without activating the virtual environment:
 
 ```bash
 ./toraiz-dump --version
 ./toraiz-programs --version
 ```
 
-The AS-1 must be connected over USB MIDI or through a MIDI interface. Make
-sure its MIDI SysEx input/output settings allow SysEx communication.
+### Windows
+
+From PowerShell or Command Prompt, create the virtual environment and install
+the project:
+
+```powershell
+py -m venv .venv
+.venv\Scripts\python.exe -m pip install -e .
+```
+
+The generated console commands can then be run directly:
+
+```powershell
+.venv\Scripts\toraiz-dump.exe --list-ports
+.venv\Scripts\toraiz-dump.exe --auto -o sequence.json
+.venv\Scripts\toraiz-programs.exe --auto
+```
+
+The repository also includes Windows shortcuts for use from its root:
+
+```powershell
+.\toraiz-dump.cmd --version
+.\toraiz-programs.cmd --version
+```
+
+To activate the environment in PowerShell and use the shorter command names:
+
+```powershell
+.venv\Scripts\Activate.ps1
+toraiz-dump --auto -o sequence.json
+toraiz-programs --auto
+```
+
+Activation is optional. If PowerShell prevents `Activate.ps1` from running,
+use the explicit `.venv\Scripts\*.exe` commands above instead of changing the
+system execution policy.
+
+On every platform, the AS-1 must be connected over USB MIDI or through a MIDI
+interface. Make sure its MIDI SysEx input/output settings allow SysEx
+communication. Use `--list-ports` if `--auto` cannot identify the platform's
+port names.
 
 ## Basic commands
 
@@ -166,6 +213,10 @@ Length: 8
 █▉░▉▉░█▉
 ▔▔▔▔▔▔▔▔
 ```
+
+Terminal styling is provided by Blessed for consistent behavior on Linux,
+macOS, and Windows. Colors are omitted automatically when output is redirected
+or the terminal does not advertise color support.
 
 The JSON file contains the active step records:
 

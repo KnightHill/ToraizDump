@@ -1,7 +1,8 @@
 import unittest
-from io import BytesIO
+from io import BytesIO, StringIO
 
 import mido
+from blessed import Terminal
 
 from toraiz_dump.output import (
     STEP_TICKS,
@@ -10,6 +11,19 @@ from toraiz_dump.output import (
     write_midi,
 )
 from toraiz_dump.protocol import TIME_DIVISIONS, SequencerData, SequencerStep
+
+
+class ColorTerminal:
+    """Deterministic terminal colors independent of the test runner's TERM."""
+
+    normal = "\033[0m"
+
+    @staticmethod
+    def color_rgb(red, green, blue):
+        return f"\033[38;2;{red};{green};{blue}m"
+
+
+COLOR_TERMINAL = ColorTerminal()
 
 
 def make_sequence():
@@ -150,7 +164,7 @@ class OutputTests(unittest.TestCase):
         )
 
         self.assertEqual(
-            sequence_as_display(sequence),
+            sequence_as_display(sequence, terminal=COLOR_TERMINAL),
             "Program: (unnamed)\n"
             "BPM: 120\n"
             "Time division: 16 (sixteenth note)\n"
@@ -165,13 +179,21 @@ class OutputTests(unittest.TestCase):
         )
 
         self.assertEqual(
-            sequence_as_display(sequence),
+            sequence_as_display(sequence, terminal=COLOR_TERMINAL),
             "Program: (unnamed)\nBPM: 120\n"
             "Time division: 16 (sixteenth note)\n"
             "Length: 5\n▉▉▉▉▉\n"
             "\033[38;2;80;160;255m▔▔▔▔\033[0m"
             "\033[38;2;180;120;255m▔\033[0m",
         )
+
+    def test_sequence_display_omits_colors_for_redirected_output(self):
+        sequence = make_sequence()
+        terminal = Terminal(stream=StringIO())
+
+        display = sequence_as_display(sequence, terminal=terminal)
+
+        self.assertNotIn("\033", display)
 
 
 if __name__ == "__main__":

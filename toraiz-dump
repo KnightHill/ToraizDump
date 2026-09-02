@@ -4,7 +4,7 @@ project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 launcher="$project_dir/.venv/bin/toraiz-dump"
 
 if [ ! -x "$launcher" ]; then
-    echo "toraiz-dump: project launcher not found; run: python -m pip install -e ." >&2
+    echo "toraiz-dump: project launcher not found; run: .venv/bin/python -m pip install -e ." >&2
     exit 1
 fi
 
