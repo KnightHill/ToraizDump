@@ -14,6 +14,20 @@ from .protocol import ProgramSummary
 from .transport import iter_program_summaries
 
 
+_BANK_COLORS = {
+    "U1": "cyan",
+    "U2": "green",
+    "U3": "yellow",
+    "U4": "magenta",
+    "U5": "blue",
+    "F1": "bright_cyan",
+    "F2": "bright_green",
+    "F3": "bright_yellow",
+    "F4": "bright_magenta",
+    "F5": "bright_blue",
+}
+
+
 def _program_label(program: ProgramSummary) -> str:
     """Return one display line for a stored program."""
 
@@ -27,6 +41,13 @@ def _bank_index(bank: str) -> int:
         raise ValueError(f"invalid AS-1 bank label: {bank!r}")
     offset = 0 if bank[0] == "U" else 5
     return offset + int(bank[1]) - 1
+
+
+def _color_bank(terminal: Any, bank: str, text: str) -> str:
+    """Apply the bank's terminal color to a program label."""
+
+    color = getattr(terminal, _BANK_COLORS.get(bank, "white"))
+    return color(text)
 
 
 def activate_program(
@@ -121,10 +142,11 @@ def _draw(
 
     lines = [
         terminal.bold("TORAIZ AS-1 programs"),
-        f"{len(programs)} programs  |  arrows: move  Enter: select  Esc/q: cancel",
+        f"{len(programs)} programs  |  banks are color-coded  |  arrows: move  Enter: select  Esc/q: cancel",
     ]
     for row, program in enumerate(visible, start=top):
         label = _program_label(program)[:width]
+        label = _color_bank(terminal, program.bank, label)
         lines.append(terminal.reverse(label) if row == selected else label)
     selected_label = (
         f"Selected {selected + 1}/{len(programs)}: "

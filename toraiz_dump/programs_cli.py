@@ -108,6 +108,8 @@ def main() -> int:
                         f"{program.bank} P{program.program:02d} {name}",
                         flush=True,
                     )
+    except KeyboardInterrupt:
+        parser.exit(130, f"{parser.prog}: interrupted\n")
     except (OSError, TimeoutError, ValueError) as error:
         parser.exit(1, f"{parser.prog}: error: {error}\n")
     return 0

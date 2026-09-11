@@ -85,7 +85,7 @@ class ProgramsCliTests(unittest.TestCase):
                     main()
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertEqual(output.getvalue(), "toraiz-programs 0.4.1\n")
+        self.assertEqual(output.getvalue(), "toraiz-programs 0.4.2\n")
 
     @patch("toraiz_dump.programs_cli.iter_program_summaries")
     @patch("toraiz_dump.programs_cli.RtMidiPollingInput")
@@ -112,6 +112,29 @@ class ProgramsCliTests(unittest.TestCase):
             errors.getvalue(),
             "toraiz-programs: error: timed out waiting for U2 P03\n",
         )
+
+    @patch("toraiz_dump.programs_cli.iter_program_summaries")
+    @patch("toraiz_dump.programs_cli.RtMidiPollingInput")
+    @patch("mido.open_output")
+    def test_ctrl_c_exits_cleanly(
+        self, open_output, polling_input, iter_summaries
+    ):
+        open_output.return_value = ContextValue()
+        polling_input.return_value = ContextValue()
+        iter_summaries.side_effect = KeyboardInterrupt
+        errors = io.StringIO()
+
+        with patch.object(
+            sys,
+            "argv",
+            ["toraiz-programs", "--midi-output", "TORAIZ AS-1"],
+        ):
+            with redirect_stderr(errors):
+                with self.assertRaises(SystemExit) as raised:
+                    main()
+
+        self.assertEqual(raised.exception.code, 130)
+        self.assertEqual(errors.getvalue(), "toraiz-programs: interrupted\n")
 
 
 if __name__ == "__main__":
