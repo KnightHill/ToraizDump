@@ -130,6 +130,18 @@ class SelectorCliTests(unittest.TestCase):
 
         self.assertIsNone(selected)
 
+    def test_enter_activates_and_keeps_selector_open_with_callback(self):
+        terminal = FakeTerminal((
+            FakeKey("\n", "KEY_ENTER"),
+            FakeKey("q"),
+        ))
+        selected = []
+        with redirect_stdout(io.StringIO()):
+            result = select_program(PROGRAMS, terminal, selected.append)
+
+        self.assertIsNone(result)
+        self.assertEqual(selected, [PROGRAMS[0]])
+
 
 if __name__ == "__main__":
     unittest.main()

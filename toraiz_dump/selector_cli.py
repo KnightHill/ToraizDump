@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from typing import Any
 
 from blessed import Terminal
@@ -136,9 +136,16 @@ def _draw(
 
 
 def select_program(
-    programs: Sequence[ProgramSummary], terminal: Any | None = None
+    programs: Sequence[ProgramSummary],
+    terminal: Any | None = None,
+    on_select: Callable[[ProgramSummary], None] | None = None,
 ) -> ProgramSummary | None:
-    """Interactively select a program, or return ``None`` when cancelled."""
+    """Interactively select programs, or return ``None`` when cancelled.
+
+    When ``on_select`` is provided, Enter activates the highlighted program
+    and keeps the selector open.  Without a callback, Enter retains the
+    original one-shot return behavior for callers that only need a selection.
+    """
 
     if not programs:
         raise ValueError("no programs match the requested filter")
@@ -154,7 +161,11 @@ def select_program(
             key = terminal.inkey()
             key_name = key.name or ""
             if key_name == "KEY_ENTER" or str(key) in ("\n", "\r"):
-                return programs[selected]
+                program = programs[selected]
+                if on_select is None:
+                    return program
+                on_select(program)
+                continue
             if key_name == "KEY_ESCAPE" or str(key).lower() == "q":
                 return None
             selected = _move_selection(programs, selected, key_name, page)
@@ -187,6 +198,7 @@ def main() -> int:
         return 0
 
     input_name, output_name = resolve_port_names(parser, args, mido)
+    terminal = Terminal()
 
     try:
         programs: list[ProgramSummary] = []
@@ -198,7 +210,8 @@ def main() -> int:
                     output, input_port, args.timeout
                 ):
                     print(
-                        f"\rReading programs: {_program_label(program)}",
+                        f"\rReading programs: {_program_label(program)}"
+                        f"{terminal.clear_eol}",
                         end="",
                         file=sys.stderr,
                         flush=True,
@@ -206,17 +219,22 @@ def main() -> int:
                     if args.filter and not program.name.startswith(f"{args.filter} "):
                         continue
                     programs.append(program)
-            print("\r" + " " * 79 + "\r", end="", file=sys.stderr, flush=True)
-            selected = select_program(programs)
-            if selected is not None:
-                activate_program(output, selected, args.midi_channel)
+            print(
+                "\r" + terminal.clear_eol,
+                end="",
+                file=sys.stderr,
+                flush=True,
+            )
+            def activate_selected(program: ProgramSummary) -> None:
+                activate_program(output, program, args.midi_channel)
+                print(f"Selected {_program_label(program)}", flush=True)
+
+            select_program(programs, on_select=activate_selected)
     except (OSError, TimeoutError, ValueError) as error:
         parser.exit(1, f"{parser.prog}: error: {error}\n")
     except KeyboardInterrupt:
         return 130
 
-    if selected is not None:
-        print(f"Selected {_program_label(selected)}")
     return 0
 
 

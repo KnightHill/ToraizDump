@@ -131,6 +131,9 @@ not respond before `--timeout` (2 seconds by default), the command identifies
 that slot and stops with a nonzero exit status. It does not silently produce an
 incomplete list.
 
+Press `Ctrl+C` to stop a scan cleanly; the MIDI ports are closed and the
+command exits with status `130`.
+
 The command also accepts the same `--midi-input`, `--midi-output`, `--auto`,
 `--list-ports`, and `--version` connection options as `toraiz-dump`:
 
@@ -152,8 +155,8 @@ interactive terminal interface:
 
 Use Up and Down to move one program, or Left and Right to move between banks.
 Page Up, Page Down, Home, and End provide faster navigation. Press Enter to
-send Bank Select and Program Change to the AS-1. Press Escape or `q` to exit
-without changing the program.
+send Bank Select and Program Change to the AS-1; the selector stays open so
+you can select another program. Press Escape or `q` to exit.
 
 Warning: selecting another program on the AS-1 can discard unsaved edits to
 the currently active program.
