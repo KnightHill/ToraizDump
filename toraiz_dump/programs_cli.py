@@ -15,12 +15,10 @@ CATEGORY_CODES = (
 )
 
 
-def main() -> int:
-    """Run the stored-program listing command."""
+def create_parser(*, description: str | None = None) -> argparse.ArgumentParser:
+    """Create the common parser used by stored-program commands."""
 
-    import mido
-
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "--version",
         action="version",
@@ -49,16 +47,13 @@ def main() -> int:
         help="response timeout for each program in seconds (default: 2.0)",
     )
     parser.add_argument("--list-ports", action="store_true")
-    args = parser.parse_args()
+    return parser
 
-    if args.list_ports:
-        print("MIDI input ports:")
-        for name in mido.get_input_names():
-            print(f"  {name}")
-        print("MIDI output ports:")
-        for name in mido.get_output_names():
-            print(f"  {name}")
-        return 0
+
+def resolve_port_names(
+    parser: argparse.ArgumentParser, args: argparse.Namespace, mido: object
+) -> tuple[str, str]:
+    """Validate connection options and return input/output port names."""
 
     if args.timeout <= 0:
         parser.error("--timeout must be greater than zero")
@@ -76,6 +71,27 @@ def main() -> int:
             parser.error("--midi-output, --auto, or --list-ports is required")
         output_name = args.midi_output
         input_name = args.midi_input or output_name
+    return input_name, output_name
+
+
+def main() -> int:
+    """Run the stored-program listing command."""
+
+    import mido
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    if args.list_ports:
+        print("MIDI input ports:")
+        for name in mido.get_input_names():
+            print(f"  {name}")
+        print("MIDI output ports:")
+        for name in mido.get_output_names():
+            print(f"  {name}")
+        return 0
+
+    input_name, output_name = resolve_port_names(parser, args, mido)
 
     try:
         with RtMidiPollingInput(input_name) as input_port:

@@ -12,9 +12,9 @@ returns all 64 sequencer steps; individual step queries are not required.
 python -m pip install -e .
 ```
 
-This installs the `toraiz-dump` and `toraiz-programs` commands into the active
-Python environment. Run the installation command again after updating an
-existing checkout so the new launcher is created.
+This installs the `toraiz-dump`, `toraiz-programs`, and `toraiz-select`
+commands into the active Python environment. Run the installation command
+again after updating an existing checkout so new launchers are created.
 
 The repository also contains shortcuts that can be run directly from its root
 without activating the virtual environment:
@@ -22,6 +22,7 @@ without activating the virtual environment:
 ```bash
 ./toraiz-dump --version
 ./toraiz-programs --version
+./toraiz-select --version
 ```
 
 The AS-1 must be connected over USB MIDI or through a MIDI interface. Make
@@ -33,6 +34,7 @@ sure its MIDI SysEx input/output settings allow SysEx communication.
 toraiz-dump --list-ports
 toraiz-dump --version
 toraiz-programs --version
+toraiz-select --version
 ```
 
 Dump commands require `-o`/`--output` to specify the file where the result is
@@ -138,6 +140,38 @@ toraiz-programs \
   --midi-output "Toraiz AS-1:Toraiz AS-1 MIDI 1 28:0" \
   --timeout 5
 ```
+
+## Select a stored program
+
+`toraiz-select` reads the same stored-program list and displays it in an
+interactive terminal interface:
+
+```bash
+./toraiz-select --auto
+```
+
+Use Up and Down to move one program, or Left and Right to move between banks.
+Page Up, Page Down, Home, and End provide faster navigation. Press Enter to
+send Bank Select and Program Change to the AS-1. Press Escape or `q` to exit
+without changing the program.
+
+Warning: selecting another program on the AS-1 can discard unsaved edits to
+the currently active program.
+
+MIDI output channels are numbered 1 through 16. Channel 1 is used by default;
+select another channel with `--midi-out-channel`:
+
+```bash
+./toraiz-select --auto --midi-out-channel 5
+```
+
+`--midi-channel` is a shorter alias for the same option. The AS-1 must be
+configured to receive on the selected channel or on all channels.
+
+The selector supports the same `--midi-input`, `--midi-output`, `--auto`,
+`--filter`, `--timeout`, `--list-ports`, and `--version` options as
+`toraiz-programs`. Loading all 990 names can take several minutes over a
+5-pin MIDI connection; the current location is displayed while loading.
 
 ## Output formats
 
