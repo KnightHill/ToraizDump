@@ -47,7 +47,7 @@ class OutputTests(unittest.TestCase):
     def test_sequence_as_strudel_formats_notes_and_rests(self):
         self.assertEqual(
             sequence_as_strudel(make_sequence()),
-            'setcpm(123/4)\nnote("<60 ~ 64 67>*16").sound("piano")',
+            'setcpm(123/4)\nnote("<60 ~ 64 67>*16")\n.sound("supersaw")',
         )
 
     def test_sequence_as_strudel_elongates_notes_across_ties(self):
@@ -66,7 +66,7 @@ class OutputTests(unittest.TestCase):
 
         self.assertEqual(
             sequence_as_strudel(sequence),
-            'setcpm(120/4)\nnote("<60@3 ~ 64>*16").sound("piano")',
+            'setcpm(120/4)\nnote("<60@3 ~ 64>*16")\n.sound("supersaw")',
         )
 
     def test_sequence_as_strudel_treats_initial_tie_as_a_note(self):

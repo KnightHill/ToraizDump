@@ -131,6 +131,7 @@ def main() -> int:
     with RtMidiPollingInput(input_name) as input_port:
         with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
             sequence = read_current_sequencer(output, input_port, args.timeout)
+            print(sequence_as_display(sequence), flush=True)
             if args.format == "midi":
                 with open(args.output, "wb") as output_file:
                     write_midi(sequence, output_file)
@@ -142,5 +143,4 @@ def main() -> int:
                 with open(args.output, "w", encoding="utf-8") as output_file:
                     json.dump(sequence_as_dict(sequence), output_file, indent=2)
                     output_file.write("\n")
-            print(sequence_as_display(sequence), flush=True)
     return 0

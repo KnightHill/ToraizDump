@@ -98,7 +98,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(result, 0)
             self.assertEqual(
                 destination.read_text(encoding="utf-8"),
-                'setcpm(120/4)\nnote("<60 ~>*16").sound("piano")\n',
+                'setcpm(120/4)\nnote("<60 ~>*16")\n.sound("supersaw")\n',
             )
             self.assertIn("Program: Test", output.getvalue())
 

@@ -70,7 +70,7 @@ def sequence_as_display(sequence: SequencerData) -> str:
 
 
 def sequence_as_strudel(sequence: SequencerData) -> str:
-    """Return a Strudel pattern using fixed sixteenth-note steps."""
+    """Return a Strudel mini-notation pattern using fixed sixteenth-note steps."""
 
     tokens: list[tuple[str, int]] = []
     active_note_index: int | None = None
@@ -93,7 +93,7 @@ def sequence_as_strudel(sequence: SequencerData) -> str:
     )
     return (
         f"setcpm({sequence.bpm}/4)\n"
-        f'note("<{notation}>*16").sound("piano")'
+        f'note("<{notation}>*16")\n.sound("supersaw")'
     )
 
 

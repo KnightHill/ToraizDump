@@ -257,8 +257,9 @@ toraiz-dump --auto --format strudel --output sequence.strudel
 
 The generated file uses MIDI note numbers with `note()`, `~` for rests, and
 temporal weights such as `60@2` for tied steps. It sets the Strudel tempo from
-the AS-1 BPM and uses the `piano` sound. Strudel output currently uses a fixed
-sixteenth-note grid (`*16`); the AS-1 time-division setting is not translated.
+the AS-1 BPM and uses the `supersaw` synthesizer. Strudel output currently uses
+a fixed sixteenth-note grid (`*16`); the AS-1 time-division setting is not
+translated.
 
 Play a saved MIDI file with `amidiplay`:
 
