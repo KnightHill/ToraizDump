@@ -7,6 +7,7 @@ from toraiz_dump.output import (
     STEP_TICKS,
     sequence_as_dict,
     sequence_as_display,
+    sequence_as_strudel,
     write_midi,
 )
 from toraiz_dump.protocol import TIME_DIVISIONS, SequencerData, SequencerStep
@@ -42,6 +43,40 @@ class OutputTests(unittest.TestCase):
             value["steps"][1],
             {"note": 0, "velocity": 0, "rest": True, "tie": False},
         )
+
+    def test_sequence_as_strudel_formats_notes_and_rests(self):
+        self.assertEqual(
+            sequence_as_strudel(make_sequence()),
+            'setcpm(123/4)\nnote("<60 ~ 64 67>*16").sound("piano")',
+        )
+
+    def test_sequence_as_strudel_elongates_notes_across_ties(self):
+        sequence = SequencerData(
+            length=5,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=60, velocity=100, tie=True),
+                SequencerStep(note=60, velocity=100, tie=True),
+                SequencerStep(note=0, velocity=0),
+                SequencerStep(note=64, velocity=90),
+            ),
+            raw_length=4,
+            bpm=120,
+        )
+
+        self.assertEqual(
+            sequence_as_strudel(sequence),
+            'setcpm(120/4)\nnote("<60@3 ~ 64>*16").sound("piano")',
+        )
+
+    def test_sequence_as_strudel_treats_initial_tie_as_a_note(self):
+        sequence = SequencerData(
+            length=1,
+            steps=(SequencerStep(note=60, velocity=100, tie=True),),
+            raw_length=0,
+        )
+
+        self.assertIn('note("<60>*16")', sequence_as_strudel(sequence))
 
     def test_write_midi_uses_sixteenth_note_steps_and_rests(self):
         output = BytesIO()

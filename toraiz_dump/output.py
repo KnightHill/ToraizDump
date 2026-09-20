@@ -69,6 +69,34 @@ def sequence_as_display(sequence: SequencerData) -> str:
     )
 
 
+def sequence_as_strudel(sequence: SequencerData) -> str:
+    """Return a Strudel pattern using fixed sixteenth-note steps."""
+
+    tokens: list[tuple[str, int]] = []
+    active_note_index: int | None = None
+
+    for step in sequence.steps[: sequence.length]:
+        if step.tie and active_note_index is not None:
+            note, weight = tokens[active_note_index]
+            tokens[active_note_index] = (note, weight + 1)
+            continue
+        if step.is_rest:
+            tokens.append(("~", 1))
+            active_note_index = None
+        else:
+            tokens.append((str(step.note), 1))
+            active_note_index = len(tokens) - 1
+
+    notation = " ".join(
+        f"{token}@{weight}" if weight > 1 else token
+        for token, weight in tokens
+    )
+    return (
+        f"setcpm({sequence.bpm}/4)\n"
+        f'note("<{notation}>*16").sound("piano")'
+    )
+
+
 def write_midi(sequence: SequencerData, file: BinaryIO) -> None:
     """Write the active AS-1 sequence as a type-0 Standard MIDI File."""
 

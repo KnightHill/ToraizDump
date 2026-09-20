@@ -249,6 +249,17 @@ source TimeDiv value is also stored as a text meta-event. MIDI output contains
 only the active number of steps and is saved to the file specified by
 `--output`.
 
+Save the sequence as executable Strudel code:
+
+```bash
+toraiz-dump --auto --format strudel --output sequence.strudel
+```
+
+The generated file uses MIDI note numbers with `note()`, `~` for rests, and
+temporal weights such as `60@2` for tied steps. It sets the Strudel tempo from
+the AS-1 BPM and uses the `piano` sound. Strudel output currently uses a fixed
+sixteenth-note grid (`*16`); the AS-1 time-division setting is not translated.
+
 Play a saved MIDI file with `amidiplay`:
 
 ```bash

@@ -8,7 +8,12 @@ import re
 from collections.abc import Sequence
 
 from . import __version__
-from .output import sequence_as_dict, sequence_as_display, write_midi
+from .output import (
+    sequence_as_dict,
+    sequence_as_display,
+    sequence_as_strudel,
+    write_midi,
+)
 from .ports import RtMidiPollingInput
 from .transport import read_current_sequencer
 
@@ -77,7 +82,7 @@ def main() -> int:
     parser.add_argument(
         "-f",
         "--format",
-        choices=("json", "midi"),
+        choices=("json", "midi", "strudel"),
         default="json",
         help="output format (default: json)",
     )
@@ -129,6 +134,10 @@ def main() -> int:
             if args.format == "midi":
                 with open(args.output, "wb") as output_file:
                     write_midi(sequence, output_file)
+            elif args.format == "strudel":
+                with open(args.output, "w", encoding="utf-8") as output_file:
+                    output_file.write(sequence_as_strudel(sequence))
+                    output_file.write("\n")
             else:
                 with open(args.output, "w", encoding="utf-8") as output_file:
                     json.dump(sequence_as_dict(sequence), output_file, indent=2)
