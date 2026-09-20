@@ -85,7 +85,7 @@ class ProgramsCliTests(unittest.TestCase):
                     main()
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertEqual(output.getvalue(), "toraiz-programs 0.4.2\n")
+        self.assertEqual(output.getvalue(), "toraiz-programs 0.5.0\n")
 
     @patch("toraiz_dump.programs_cli.iter_program_summaries")
     @patch("toraiz_dump.programs_cli.RtMidiPollingInput")
