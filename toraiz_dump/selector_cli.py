@@ -27,11 +27,22 @@ _BANK_COLORS = {
     "F5": "bright_blue",
 }
 
+_BRAILLE_SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+_SPINNER_PROGRAMS_PER_FRAME = 4
+
 
 def _program_label(program: ProgramSummary) -> str:
     """Return one display line for a stored program."""
 
     return f"{program.bank} P{program.program:02d} {program.name or '(unnamed)'}"
+
+
+def _loading_message(program: ProgramSummary, index: int) -> str:
+    """Return the animated status text for a program being loaded."""
+
+    frame_index = index // _SPINNER_PROGRAMS_PER_FRAME
+    frame = _BRAILLE_SPINNER[frame_index % len(_BRAILLE_SPINNER)]
+    return f"{frame} Reading programs: {_program_label(program)}"
 
 
 def _bank_index(bank: str) -> int:
@@ -48,6 +59,13 @@ def _color_bank(terminal: Any, bank: str, text: str) -> str:
 
     color = getattr(terminal, _BANK_COLORS.get(bank, "white"))
     return color(text)
+
+
+def _is_enter(key: Any) -> bool:
+    """Return whether a terminal keystroke represents either Enter key."""
+
+    return (key.name in ("KEY_ENTER", "KEY_KP_ENTER")
+            or str(key) in ("\n", "\r"))
 
 
 def activate_program(
@@ -130,18 +148,23 @@ def _move_selection(
 
 
 def _draw(
-    terminal: Any, programs: Sequence[ProgramSummary], selected: int
+    terminal: Any,
+    programs: Sequence[ProgramSummary],
+    selected: int,
+    midi_device: str | None = None,
+    midi_channel: int | None = None,
 ) -> int:
     """Draw one selector frame and return the number of visible rows."""
 
     width = max(20, terminal.width or 80)
-    visible_rows = max(1, (terminal.height or 24) - 4)
+    visible_rows = max(1, (terminal.height or 24) - 5)
     top = max(0, selected - visible_rows // 2)
     top = min(top, max(0, len(programs) - visible_rows))
     visible = programs[top : top + visible_rows]
 
     lines = [
         terminal.bold("TORAIZ AS-1 programs"),
+        f"MIDI device: {midi_device or '(default)'}  Channel: {midi_channel or '?'}",
         f"{len(programs)} programs  |  banks are color-coded  |  arrows: move  Enter: select  Esc/q: cancel",
     ]
     for row, program in enumerate(visible, start=top):
@@ -161,6 +184,8 @@ def select_program(
     programs: Sequence[ProgramSummary],
     terminal: Any | None = None,
     on_select: Callable[[ProgramSummary], None] | None = None,
+    midi_device: str | None = None,
+    midi_channel: int | None = None,
 ) -> ProgramSummary | None:
     """Interactively select programs, or return ``None`` when cancelled.
 
@@ -179,10 +204,16 @@ def select_program(
     selected = 0
     with terminal.fullscreen(), terminal.cbreak(), terminal.hidden_cursor():
         while True:
-            page = _draw(terminal, programs, selected)
+            page = _draw(
+                terminal,
+                programs,
+                selected,
+                midi_device=midi_device,
+                midi_channel=midi_channel,
+            )
             key = terminal.inkey()
             key_name = key.name or ""
-            if key_name == "KEY_ENTER" or str(key) in ("\n", "\r"):
+            if _is_enter(key):
                 program = programs[selected]
                 if on_select is None:
                     return program
@@ -228,11 +259,11 @@ def main() -> int:
             output_name, backend="mido.backends.rtmidi"
         ) as output:
             with RtMidiPollingInput(input_name) as input_port:
-                for program in iter_program_summaries(
+                for index, program in enumerate(iter_program_summaries(
                     output, input_port, args.timeout
-                ):
+                )):
                     print(
-                        f"\rReading programs: {_program_label(program)}"
+                        f"\r{_loading_message(program, index)}"
                         f"{terminal.clear_eol}",
                         end="",
                         file=sys.stderr,
@@ -251,7 +282,12 @@ def main() -> int:
                 activate_program(output, program, args.midi_channel)
                 print(f"Selected {_program_label(program)}", flush=True)
 
-            select_program(programs, on_select=activate_selected)
+            select_program(
+                programs,
+                on_select=activate_selected,
+                midi_device=output_name,
+                midi_channel=args.midi_channel,
+            )
     except (OSError, TimeoutError, ValueError) as error:
         parser.exit(1, f"{parser.prog}: error: {error}\n")
     except KeyboardInterrupt:

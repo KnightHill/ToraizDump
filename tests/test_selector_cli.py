@@ -6,6 +6,8 @@ from toraiz_dump.protocol import ProgramSummary
 from toraiz_dump.selector_cli import (
     _bank_index,
     _draw,
+    _is_enter,
+    _loading_message,
     _move_selection,
     _next_bank,
     _previous_bank,
@@ -81,15 +83,46 @@ class SelectorCliTests(unittest.TestCase):
         self.assertEqual(_program_label(PROGRAMS[0]), "U1 P01 BA First")
         self.assertEqual(_program_label(PROGRAMS[-1]), "F1 P01 (unnamed)")
 
+    def test_loading_message_cycles_through_braille_spinner(self):
+        self.assertEqual(
+            _loading_message(PROGRAMS[0], 0),
+            "⠋ Reading programs: U1 P01 BA First",
+        )
+        self.assertEqual(
+            _loading_message(PROGRAMS[0], 3),
+            "⠋ Reading programs: U1 P01 BA First",
+        )
+        self.assertEqual(
+            _loading_message(PROGRAMS[0], 4),
+            "⠙ Reading programs: U1 P01 BA First",
+        )
+        self.assertEqual(
+            _loading_message(PROGRAMS[0], 40),
+            "⠋ Reading programs: U1 P01 BA First",
+        )
+
     def test_program_rows_use_their_bank_colors(self):
         terminal = FakeTerminal(())
         with redirect_stdout(io.StringIO()) as output:
-            _draw(terminal, PROGRAMS, selected=0)
+            _draw(
+                terminal,
+                PROGRAMS,
+                selected=0,
+                midi_device="TORAIZ AS-1 MIDI Out",
+                midi_channel=5,
+            )
 
         rendered = output.getvalue()
+        self.assertIn("MIDI device: TORAIZ AS-1 MIDI Out  Channel: 5", rendered)
         self.assertIn("[cyan]U1 P01 BA First[/cyan]", rendered)
         self.assertIn("[green]U2 P01 LD Third[/green]", rendered)
         self.assertIn("[bright_cyan]F1 P01 (unnamed)[/bright_cyan]", rendered)
+
+    def test_enter_detection_accepts_regular_and_keypad_enter(self):
+        self.assertTrue(_is_enter(FakeKey("", "KEY_ENTER")))
+        self.assertTrue(_is_enter(FakeKey("", "KEY_KP_ENTER")))
+        self.assertTrue(_is_enter(FakeKey("\n")))
+        self.assertFalse(_is_enter(FakeKey("x")))
 
     def test_bank_labels_map_to_as1_midi_bank_values(self):
         self.assertEqual(_bank_index("U1"), 0)
@@ -160,6 +193,17 @@ class SelectorCliTests(unittest.TestCase):
             result = select_program(PROGRAMS, terminal, selected.append)
 
         self.assertIsNone(result)
+        self.assertEqual(selected, [PROGRAMS[0]])
+
+    def test_keypad_enter_activates_with_callback(self):
+        terminal = FakeTerminal((
+            FakeKey("", "KEY_KP_ENTER"),
+            FakeKey("q"),
+        ))
+        selected = []
+        with redirect_stdout(io.StringIO()):
+            select_program(PROGRAMS, terminal, selected.append)
+
         self.assertEqual(selected, [PROGRAMS[0]])
 
 
