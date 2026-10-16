@@ -41,7 +41,7 @@ class CliTests(unittest.TestCase):
                     main()
 
         self.assertEqual(raised.exception.code, 0)
-        self.assertEqual(output.getvalue(), "toraiz-dump 0.5.0\n")
+        self.assertEqual(output.getvalue(), "toraiz-dump 0.5.1\n")
 
 
 if __name__ == "__main__":
