@@ -14,18 +14,14 @@ from .protocol import ProgramSummary
 from .transport import iter_program_summaries
 
 
-_BANK_COLORS = {
-    "U1": "cyan",
-    "U2": "green",
-    "U3": "yellow",
-    "U4": "magenta",
-    "U5": "blue",
-    "F1": "bright_cyan",
-    "F2": "bright_green",
-    "F3": "bright_yellow",
-    "F4": "bright_magenta",
-    "F5": "bright_blue",
-}
+_BANK_PALETTE = (
+    (0x55, 0x5A, 0x6C),
+    (0xB7, 0xCF, 0x5C),
+    (0xB5, 0x70, 0x98),
+    (0xE0, 0x43, 0x3C),
+    (0xFD, 0xD9, 0x70),
+    (0x7C, 0xC3, 0xCA),
+)
 
 _BRAILLE_SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 _SPINNER_PROGRAMS_PER_FRAME = 4
@@ -57,8 +53,8 @@ def _bank_index(bank: str) -> int:
 def _color_bank(terminal: Any, bank: str, text: str) -> str:
     """Apply the bank's terminal color to a program label."""
 
-    color = getattr(terminal, _BANK_COLORS.get(bank, "white"))
-    return color(text)
+    red, green, blue = _BANK_PALETTE[_bank_index(bank) % len(_BANK_PALETTE)]
+    return terminal.color_rgb(red, green, blue)(text)
 
 
 def _is_enter(key: Any) -> bool:

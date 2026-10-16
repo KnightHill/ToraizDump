@@ -48,14 +48,9 @@ class FakeTerminal:
     def reverse(self, value):
         return f">{value}<"
 
-    def __getattr__(self, name):
-        if name in {
-            "blue", "bright_blue", "bright_cyan", "bright_green",
-            "bright_magenta", "bright_yellow", "cyan", "green", "magenta",
-            "white", "yellow",
-        }:
-            return lambda value: f"[{name}]{value}[/{name}]"
-        raise AttributeError(name)
+    def color_rgb(self, red, green, blue):
+        color = f"#{red:02x}{green:02x}{blue:02x}"
+        return lambda value: f"[{color}]{value}[/{color}]"
 
     def fullscreen(self):
         return nullcontext()
@@ -114,9 +109,9 @@ class SelectorCliTests(unittest.TestCase):
 
         rendered = output.getvalue()
         self.assertIn("MIDI device: TORAIZ AS-1 MIDI Out  Channel: 5", rendered)
-        self.assertIn("[cyan]U1 P01 BA First[/cyan]", rendered)
-        self.assertIn("[green]U2 P01 LD Third[/green]", rendered)
-        self.assertIn("[bright_cyan]F1 P01 (unnamed)[/bright_cyan]", rendered)
+        self.assertIn("[#555a6c]U1 P01 BA First[/#555a6c]", rendered)
+        self.assertIn("[#b7cf5c]U2 P01 LD Third[/#b7cf5c]", rendered)
+        self.assertIn("[#7cc3ca]F1 P01 (unnamed)[/#7cc3ca]", rendered)
 
     def test_enter_detection_accepts_regular_and_keypad_enter(self):
         self.assertTrue(_is_enter(FakeKey("", "KEY_ENTER")))
