@@ -249,6 +249,53 @@ source TimeDiv value is also stored as a text meta-event. MIDI output contains
 only the active number of steps and is saved to the file specified by
 `--output`.
 
+### Strudel
+
+Export the sequence as code that can be pasted into the
+[Strudel web editor](https://strudel.cc/):
+
+```bash
+toraiz-dump --auto --format strudel --output sequence.strudel
+# Short form:
+toraiz-dump --auto -f strudel -o sequence.strudel
+```
+
+Open `sequence.strudel`, copy its contents into Strudel, and start playback.
+For an AS-1 pattern at 123 BPM containing a three-step tied note, a rest, and
+two regular notes, the generated code looks like this:
+
+```javascript
+setcpm(123/4)
+note("<60@3 ~ 64 67>*16")
+.sound("supersaw")
+```
+
+The conversion maps AS-1 sequence data to Strudel as follows:
+
+| AS-1 data | Strudel output |
+| --- | --- |
+| Tempo | `setcpm(BPM/4)`, treating one Strudel cycle as four beats |
+| Note | MIDI note number inside `note()`, such as `60` for middle C |
+| Rest | `~` |
+| Tie | Temporal weight on the preceding note, such as `60@3` for three steps |
+| Step grid | `*16`, producing sixteen step units per cycle |
+
+The generated `.sound("supersaw")` is only a convenient browser-synth sound.
+Change it to another Strudel synth or sample and add effects as desired; it
+does not reproduce the AS-1 analog patch.
+
+Current Strudel-export limitations:
+
+- The AS-1 time-division setting is not translated; output always uses the
+  fixed sixteenth-note grid `*16`.
+- Per-step velocity is not exported.
+- AS-1 oscillator, filter, envelope, effect, and other program parameters are
+  not exported.
+
+For more details about editing the result, see Strudel's
+[mini-notation guide](https://strudel.cc/learn/mini-notation/) and
+[notes guide](https://strudel.cc/learn/notes/).
+
 Play a saved MIDI file with `amidiplay`:
 
 ```bash
