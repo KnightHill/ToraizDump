@@ -1,16 +1,27 @@
+import re
 import unittest
 from io import BytesIO
 
 import mido
 
 from toraiz_dump.output import (
+    PIANO_ROLL_OCTAVE_BACKGROUNDS,
     STEP_TICKS,
+    _note_name,
     sequence_as_dict,
     sequence_as_display,
+    sequence_as_piano_roll,
     sequence_as_strudel,
     write_midi,
 )
 from toraiz_dump.protocol import TIME_DIVISIONS, SequencerData, SequencerStep
+
+
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def strip_ansi(value):
+    return ANSI_ESCAPE.sub("", value)
 
 
 def make_sequence():
@@ -172,7 +183,7 @@ class OutputTests(unittest.TestCase):
             ],
         )
 
-    def test_sequence_as_display_glues_tied_steps(self):
+    def test_sequence_as_display_includes_piano_roll(self):
         sequence = SequencerData(
             length=4,
             steps=(
@@ -184,29 +195,129 @@ class OutputTests(unittest.TestCase):
             raw_length=3,
         )
 
-        self.assertEqual(
-            sequence_as_display(sequence),
-            "Program: (unnamed)\n"
-            "BPM: 120\n"
-            "Time division: 16 (sixteenth note)\n"
-            "Length: 4\n█▉░▉\n\033[38;2;80;160;255m▔▔▔▔\033[0m",
-        )
+        rendered = sequence_as_display(sequence)
+        plain = strip_ansi(rendered)
 
-    def test_sequence_as_display_colors_four_step_groups(self):
+        self.assertIn("Length: 4\nPiano roll:", plain)
+        self.assertIn("Piano roll:\nSteps 1-4", plain)
+        self.assertIn("C4 ■■──    ", plain)
+        self.assertIn("E4       ■■", plain)
+
+    def test_sequence_as_display_has_no_compact_step_strip(self):
         sequence = SequencerData(
             length=5,
             steps=tuple(SequencerStep(note=60, velocity=100) for _ in range(5)),
             raw_length=4,
         )
 
-        self.assertEqual(
-            sequence_as_display(sequence),
-            "Program: (unnamed)\nBPM: 120\n"
-            "Time division: 16 (sixteenth note)\n"
-            "Length: 5\n▉▉▉▉▉\n"
-            "\033[38;2;80;160;255m▔▔▔▔\033[0m"
-            "\033[38;2;180;120;255m▔\033[0m",
+        rendered = sequence_as_display(sequence)
+
+        self.assertIn("Length: 5\nPiano roll:", rendered)
+        self.assertNotIn("▉", rendered)
+        self.assertNotIn("░", rendered)
+        self.assertNotIn("█", rendered)
+
+    def test_note_names_use_c4_for_middle_c(self):
+        self.assertEqual(_note_name(0), "C-1")
+        self.assertEqual(_note_name(60), "C4")
+        self.assertEqual(_note_name(61), "C#4")
+        self.assertEqual(_note_name(127), "G9")
+
+    def test_piano_roll_renders_only_rows_with_notes(self):
+        sequence = SequencerData(
+            length=5,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=0, velocity=0, tie=True),
+                SequencerStep(note=0, velocity=0),
+                SequencerStep(note=64, velocity=90),
+                SequencerStep(note=64, velocity=90, tie=True),
+            ),
+            raw_length=4,
         )
+
+        rendered = sequence_as_piano_roll(sequence)
+
+        self.assertEqual(
+            strip_ansi(rendered),
+            "Piano roll:\n"
+            "Steps 1-5\n"
+            "   1 2 3 4 5 \n"
+            "E4       ■■──\n"
+            "C4 ■■──      ",
+        )
+        self.assertNotIn("│", rendered)
+        self.assertIn("\033[48;2;35;40;48m", rendered)
+        self.assertIn("\033[48;2;48;54;64m", rendered)
+
+    def test_piano_roll_treats_initial_tied_note_as_attack(self):
+        sequence = SequencerData(
+            length=1,
+            steps=(SequencerStep(note=60, velocity=100, tie=True),),
+            raw_length=0,
+        )
+
+        self.assertIn("C4 ■■", strip_ansi(sequence_as_piano_roll(sequence)))
+
+    def test_piano_roll_reports_all_rest_sequence(self):
+        sequence = SequencerData(
+            length=2,
+            steps=(
+                SequencerStep(note=0, velocity=0),
+                SequencerStep(note=0, velocity=0, tie=True),
+            ),
+            raw_length=1,
+        )
+
+        self.assertEqual(
+            sequence_as_piano_roll(sequence),
+            "Piano roll:\n(no active notes)",
+        )
+
+    def test_piano_roll_supports_full_midi_range(self):
+        sequence = SequencerData(
+            length=2,
+            steps=(
+                SequencerStep(note=0, velocity=100),
+                SequencerStep(note=127, velocity=100),
+            ),
+            raw_length=1,
+        )
+
+        rendered = sequence_as_piano_roll(sequence)
+        self.assertIn("G9", rendered)
+        self.assertIn("C-1", rendered)
+
+    def test_piano_roll_uses_different_label_backgrounds_per_octave(self):
+        sequence = SequencerData(
+            length=2,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=72, velocity=100),
+            ),
+            raw_length=1,
+        )
+
+        rendered = sequence_as_piano_roll(sequence)
+
+        self.assertIn(PIANO_ROLL_OCTAVE_BACKGROUNDS[4], rendered)
+        self.assertIn(PIANO_ROLL_OCTAVE_BACKGROUNDS[5], rendered)
+
+    def test_piano_roll_wraps_without_omitting_steps(self):
+        sequence = SequencerData(
+            length=64,
+            steps=tuple(
+                SequencerStep(note=60, velocity=100) for _ in range(64)
+            ),
+            raw_length=63,
+        )
+
+        rendered = sequence_as_piano_roll(sequence, width=9)
+
+        self.assertIn("Steps 1-4", rendered)
+        self.assertIn("Steps 5-8", rendered)
+        self.assertIn("Steps 61-64", rendered)
+        self.assertEqual(rendered.count("■■"), 64)
 
 
 if __name__ == "__main__":

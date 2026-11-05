@@ -183,23 +183,28 @@ default. The short options `-f` and `-o` are equivalent to `--format` and
 `--output`, respectively.
 
 Every dump also prints the program name, BPM, time division, sequence length,
-and a compact visual display of the active steps to the terminal. A note is
-shown as a seven-eighth block (`▉`), leaving a narrow gap before the next step,
-while a rest is shown as a light shade block (`░`). When a step is tied to the
-preceding note, that preceding block becomes full (`█`) to close the gap and
-show the sustained connection.
+followed by a piano roll of the active sequence steps.
 
-The line beneath the steps divides the sequence into four-step groups using
-alternating blue and purple upper bars. For example:
+![Example TORAIZ dump piano roll in the terminal](img/ui.png)
+
+The piano roll places the highest pitch at the top and uses scientific pitch
+names, where MIDI note 60 is `C4`. `■■` marks a note attack and `──` marks a tied
+continuation. Alternating background colors distinguish four-step bars without
+adding separator characters:
 
 ```text
-Program: Basic Program
-BPM: 120
-Time division: 16 (sixteenth note)
-Length: 8
-█▉░▉▉░█▉
-▔▔▔▔▔▔▔▔
+Piano roll:
+Steps 1-8
+   1 2 3 4 5 6 7 8
+E4         ■■──
+C4 ■■──
 ```
+
+Only pitches used by the sequence receive rows. On narrow terminals, the roll
+is split into consecutive labeled step blocks so that no steps are omitted. An
+all-rest pattern displays `(no active notes)` instead of an empty grid.
+Pitch labels on the left use a separate background color for each octave;
+notes in the same octave share the same label color.
 
 ### JSON
 
