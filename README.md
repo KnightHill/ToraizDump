@@ -187,19 +187,22 @@ followed by a piano roll of the active sequence steps.
 
 The piano roll places the highest pitch at the top and uses scientific pitch
 names, where MIDI note 60 is `C4`. `■■` marks a note attack and `──` marks a tied
-continuation. Vertical lines divide four-step groups:
+continuation. Alternating background colors distinguish four-step bars without
+adding separator characters:
 
 ```text
 Piano roll:
 Steps 1-8
-   1 2 3 4 │5 6 7 8
-E4         │■■──
-C4 ■■──    │
+   1 2 3 4 5 6 7 8
+E4         ■■──
+C4 ■■──
 ```
 
 Only pitches used by the sequence receive rows. On narrow terminals, the roll
 is split into consecutive labeled step blocks so that no steps are omitted. An
 all-rest pattern displays `(no active notes)` instead of an empty grid.
+Pitch labels on the left use a separate background color for each octave;
+notes in the same octave share the same label color.
 
 ### JSON
 

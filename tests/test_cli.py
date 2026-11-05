@@ -140,7 +140,7 @@ class CliTests(unittest.TestCase):
             )
             self.assertIn("Program: Test", output.getvalue())
             self.assertIn("Piano roll:", output.getvalue())
-            self.assertIn("C4 ■■", output.getvalue())
+            self.assertIn("■■", output.getvalue())
 
     @patch("toraiz_dump.cli.write_midi")
     @patch("toraiz_dump.cli.read_current_sequencer")

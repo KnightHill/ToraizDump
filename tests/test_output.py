@@ -1,9 +1,11 @@
+import re
 import unittest
 from io import BytesIO
 
 import mido
 
 from toraiz_dump.output import (
+    PIANO_ROLL_OCTAVE_BACKGROUNDS,
     STEP_TICKS,
     _note_name,
     sequence_as_dict,
@@ -13,6 +15,13 @@ from toraiz_dump.output import (
     write_midi,
 )
 from toraiz_dump.protocol import TIME_DIVISIONS, SequencerData, SequencerStep
+
+
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def strip_ansi(value):
+    return ANSI_ESCAPE.sub("", value)
 
 
 def make_sequence():
@@ -187,11 +196,12 @@ class OutputTests(unittest.TestCase):
         )
 
         rendered = sequence_as_display(sequence)
+        plain = strip_ansi(rendered)
 
-        self.assertIn("Length: 4\nPiano roll:", rendered)
-        self.assertIn("Piano roll:\nSteps 1-4", rendered)
-        self.assertIn("C4 ■■──    ", rendered)
-        self.assertIn("E4       ■■", rendered)
+        self.assertIn("Length: 4\nPiano roll:", plain)
+        self.assertIn("Piano roll:\nSteps 1-4", plain)
+        self.assertIn("C4 ■■──    ", plain)
+        self.assertIn("E4       ■■", plain)
 
     def test_sequence_as_display_has_no_compact_step_strip(self):
         sequence = SequencerData(
@@ -226,14 +236,19 @@ class OutputTests(unittest.TestCase):
             raw_length=4,
         )
 
+        rendered = sequence_as_piano_roll(sequence)
+
         self.assertEqual(
-            sequence_as_piano_roll(sequence),
+            strip_ansi(rendered),
             "Piano roll:\n"
             "Steps 1-5\n"
-            "   1 2 3 4 │5 \n"
-            "E4       ■■│──\n"
-            "C4 ■■──    │  ",
+            "   1 2 3 4 5 \n"
+            "E4       ■■──\n"
+            "C4 ■■──      ",
         )
+        self.assertNotIn("│", rendered)
+        self.assertIn("\033[48;2;35;40;48m", rendered)
+        self.assertIn("\033[48;2;48;54;64m", rendered)
 
     def test_piano_roll_treats_initial_tied_note_as_attack(self):
         sequence = SequencerData(
@@ -242,7 +257,7 @@ class OutputTests(unittest.TestCase):
             raw_length=0,
         )
 
-        self.assertIn("C4 ■■", sequence_as_piano_roll(sequence))
+        self.assertIn("C4 ■■", strip_ansi(sequence_as_piano_roll(sequence)))
 
     def test_piano_roll_reports_all_rest_sequence(self):
         sequence = SequencerData(
@@ -272,6 +287,21 @@ class OutputTests(unittest.TestCase):
         rendered = sequence_as_piano_roll(sequence)
         self.assertIn("G9", rendered)
         self.assertIn("C-1", rendered)
+
+    def test_piano_roll_uses_different_label_backgrounds_per_octave(self):
+        sequence = SequencerData(
+            length=2,
+            steps=(
+                SequencerStep(note=60, velocity=100),
+                SequencerStep(note=72, velocity=100),
+            ),
+            raw_length=1,
+        )
+
+        rendered = sequence_as_piano_roll(sequence)
+
+        self.assertIn(PIANO_ROLL_OCTAVE_BACKGROUNDS[4], rendered)
+        self.assertIn(PIANO_ROLL_OCTAVE_BACKGROUNDS[5], rendered)
 
     def test_piano_roll_wraps_without_omitting_steps(self):
         sequence = SequencerData(

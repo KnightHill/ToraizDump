@@ -16,6 +16,20 @@ NOTE_NAMES = (
     "F#", "G", "G#", "A", "A#", "B",
 )
 PIANO_ROLL_CELL_WIDTH = 2
+PIANO_ROLL_FOREGROUND = "\033[38;2;235;240;248m"
+PIANO_ROLL_BACKGROUNDS = (
+    "\033[48;2;35;40;48m",
+    "\033[48;2;48;54;64m",
+)
+PIANO_ROLL_OCTAVE_BACKGROUNDS = (
+    "\033[48;2;75;35;40m",
+    "\033[48;2;75;50;30m",
+    "\033[48;2;65;65;30m",
+    "\033[48;2;30;65;45m",
+    "\033[48;2;25;60;70m",
+    "\033[48;2;45;40;75m",
+)
+COLOR_RESET = "\033[0m"
 
 
 def sequence_as_dict(sequence: SequencerData) -> dict[str, object]:
@@ -66,11 +80,13 @@ def _piano_roll_cells(
     return cells, pitches
 
 
-def _roll_row(values: list[str]) -> str:
-    """Join piano-roll cells with a divider after each four-step group."""
+def _roll_row(values: list[str], start_step: int) -> str:
+    """Join piano-roll cells in alternating four-step background bands."""
 
-    return "│".join(
-        "".join(values[offset : offset + 4])
+    return "".join(
+        f"{PIANO_ROLL_FOREGROUND}"
+        f"{PIANO_ROLL_BACKGROUNDS[((start_step + offset) // 4) % 2]}"
+        f"{''.join(values[offset : offset + 4])}{COLOR_RESET}"
         for offset in range(0, len(values), 4)
     )
 
@@ -81,6 +97,19 @@ def _piano_roll_cell(cell: tuple[int, str] | None, note: int) -> str:
     if cell is None or cell[0] != note:
         return " " * PIANO_ROLL_CELL_WIDTH
     return cell[1] * PIANO_ROLL_CELL_WIDTH
+
+
+def _piano_roll_label(note: int, width: int) -> str:
+    """Render a pitch label using the background assigned to its octave."""
+
+    octave = note // 12 - 1
+    background = PIANO_ROLL_OCTAVE_BACKGROUNDS[
+        octave % len(PIANO_ROLL_OCTAVE_BACKGROUNDS)
+    ]
+    return (
+        f"{PIANO_ROLL_FOREGROUND}{background}"
+        f"{_note_name(note):>{width}} {COLOR_RESET}"
+    )
 
 
 def sequence_as_piano_roll(sequence: SequencerData, width: int = 80) -> str:
@@ -94,11 +123,10 @@ def sequence_as_piano_roll(sequence: SequencerData, width: int = 80) -> str:
     label_width = max(len(_note_name(note)) for note in pitch_rows)
     prefix_width = label_width + 1
 
-    # Each additional four-step group also needs one divider. Very narrow
-    # terminals still show at least one full group.
+    # Very narrow terminals still show at least one full four-step group.
     group_width = 4 * PIANO_ROLL_CELL_WIDTH
     available = max(group_width, width - prefix_width)
-    groups_per_block = max(1, (available + 1) // (group_width + 1))
+    groups_per_block = max(1, available // group_width)
     steps_per_block = groups_per_block * 4
 
     lines = ["Piano roll:"]
@@ -111,13 +139,16 @@ def sequence_as_piano_roll(sequence: SequencerData, width: int = 80) -> str:
             f"{(index + 1) % 10:<{PIANO_ROLL_CELL_WIDTH}}"
             for index in range(start, end)
         ]
-        lines.append(" " * prefix_width + _roll_row(ruler))
+        lines.append(" " * prefix_width + _roll_row(ruler, start))
         for note in pitch_rows:
             values = [
                 _piano_roll_cell(cell, note)
                 for cell in cells[start:end]
             ]
-            lines.append(f"{_note_name(note):>{label_width}} " + _roll_row(values))
+            lines.append(
+                _piano_roll_label(note, label_width)
+                + _roll_row(values, start)
+            )
     return "\n".join(lines)
 
 
