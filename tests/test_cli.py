@@ -60,6 +60,44 @@ class CliTests(unittest.TestCase):
     @patch("toraiz_dump.cli.read_current_sequencer")
     @patch("toraiz_dump.cli.RtMidiPollingInput")
     @patch("mido.open_output")
+    def test_json_format_writes_file_and_prints_piano_roll(
+        self, open_output, polling_input, read_sequence
+    ):
+        open_output.return_value = ContextValue()
+        polling_input.return_value = ContextValue()
+        read_sequence.return_value = SequencerData(
+            length=1,
+            steps=(SequencerStep(note=60, velocity=100),),
+            raw_length=0,
+            program_name="JSON Test",
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "sequence.json"
+            output = io.StringIO()
+            with patch.object(
+                sys,
+                "argv",
+                [
+                    "toraiz-dump",
+                    "--midi-output",
+                    "TORAIZ AS-1",
+                    "--output",
+                    str(destination),
+                ],
+            ):
+                with redirect_stdout(output):
+                    result = main()
+
+            self.assertIn('"note": 60', destination.read_text(encoding="utf-8"))
+
+        self.assertEqual(result, 0)
+        self.assertIn("Program: JSON Test", output.getvalue())
+        self.assertIn("Piano roll:", output.getvalue())
+
+    @patch("toraiz_dump.cli.read_current_sequencer")
+    @patch("toraiz_dump.cli.RtMidiPollingInput")
+    @patch("mido.open_output")
     def test_strudel_format_writes_file_and_prints_display(
         self, open_output, polling_input, read_sequence
     ):
@@ -101,6 +139,8 @@ class CliTests(unittest.TestCase):
                 'setcpm(120/4)\nnote("<60 ~>*16")\n.sound("supersaw")\n',
             )
             self.assertIn("Program: Test", output.getvalue())
+            self.assertIn("Piano roll:", output.getvalue())
+            self.assertIn("C4 ■■", output.getvalue())
 
     @patch("toraiz_dump.cli.write_midi")
     @patch("toraiz_dump.cli.read_current_sequencer")
@@ -140,6 +180,7 @@ class CliTests(unittest.TestCase):
         self.assertEqual(result, 0)
         write_midi.assert_called_once()
         self.assertIn("Program: MIDI Test", output.getvalue())
+        self.assertIn("Piano roll:", output.getvalue())
 
 
 if __name__ == "__main__":

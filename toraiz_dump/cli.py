@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 from collections.abc import Sequence
 
 from . import __version__
@@ -131,7 +132,8 @@ def main() -> int:
     with RtMidiPollingInput(input_name) as input_port:
         with mido.open_output(output_name, backend="mido.backends.rtmidi") as output:
             sequence = read_current_sequencer(output, input_port, args.timeout)
-            print(sequence_as_display(sequence), flush=True)
+            terminal_width = shutil.get_terminal_size(fallback=(80, 24)).columns
+            print(sequence_as_display(sequence, width=terminal_width), flush=True)
             if args.format == "midi":
                 with open(args.output, "wb") as output_file:
                     write_midi(sequence, output_file)
