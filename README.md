@@ -185,6 +185,8 @@ default. The short options `-f` and `-o` are equivalent to `--format` and
 Every dump also prints the program name, BPM, time division, sequence length,
 followed by a piano roll of the active sequence steps.
 
+![Example TORAIZ dump piano roll in the terminal](img/ui.png)
+
 The piano roll places the highest pitch at the top and uses scientific pitch
 names, where MIDI note 60 is `C4`. `■■` marks a note attack and `──` marks a tied
 continuation. Alternating background colors distinguish four-step bars without
