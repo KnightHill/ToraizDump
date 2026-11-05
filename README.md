@@ -178,12 +178,9 @@ The selector supports the same `--midi-input`, `--midi-output`, `--auto`,
 
 ## Output formats
 
-JSON is the default. These commands are equivalent:
-
-```bash
-toraiz-dump --auto --format json --output sequence.json
-toraiz-dump --auto -f json -o sequence.json
-```
+The `--format` option supports `json`, `midi`, and `strudel`. JSON is the
+default. The short options `-f` and `-o` are equivalent to `--format` and
+`--output`, respectively.
 
 Every dump also prints the program name, BPM, time division, sequence length,
 and a compact visual display of the active steps to the terminal. A note is
@@ -202,6 +199,15 @@ Time division: 16 (sixteenth note)
 Length: 8
 █▉░▉▉░█▉
 ▔▔▔▔▔▔▔▔
+```
+
+### JSON
+
+These commands are equivalent:
+
+```bash
+toraiz-dump --auto --format json --output sequence.json
+toraiz-dump --auto -f json -o sequence.json
 ```
 
 The JSON file contains the active step records:
@@ -234,6 +240,8 @@ To save JSON to a file:
 ```bash
 toraiz-dump --auto --output sequence.json
 ```
+
+### MIDI
 
 Select MIDI output and save it to a `.mid` file:
 
